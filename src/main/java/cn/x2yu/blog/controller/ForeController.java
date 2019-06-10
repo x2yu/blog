@@ -6,6 +6,7 @@ import cn.x2yu.blog.entity.Comment;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 
 /**
@@ -39,7 +40,8 @@ public class ForeController {
      * */
     @ApiOperation("获取指定id文章")
     @GetMapping("articles/{id}")
-    public ArticleDto getArticleById(){
+    public ArticleDto getArticleById()throws Exception{
+
         return null;
     }
 
