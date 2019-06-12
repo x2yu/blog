@@ -3,9 +3,11 @@ package cn.x2yu.blog.controller;
 import cn.x2yu.blog.dto.ArticleDto;
 import cn.x2yu.blog.entity.CategoryInfo;
 import cn.x2yu.blog.entity.Comment;
+import cn.x2yu.blog.service.ArticleService;
+import cn.x2yu.blog.util.ReadMd;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 
@@ -16,13 +18,21 @@ import java.util.List;
 @RequestMapping("/api")
 public class ForeController {
 
+    @Autowired
+    ArticleService articleService;
+
     /**
      * 获取所有文章
      * */
     @ApiOperation("获取所有文章")
     @GetMapping("articles/list")
     public List<ArticleDto> listAllArticleInfo(){
-        return null;
+
+        List<ArticleDto> articleDtos = articleService.listAll();
+        for(ArticleDto a:articleDtos){
+            System.out.println(a.toString());
+        }
+        return articleDtos;
     }
 
 
@@ -32,6 +42,7 @@ public class ForeController {
     @ApiOperation("获取一个分类下的所有文章")
     @GetMapping("articles/list/categories/{id}")
     public List<ArticleDto> listArticleByCategory(){
+
         return null;
     }
 
@@ -40,9 +51,17 @@ public class ForeController {
      * */
     @ApiOperation("获取指定id文章")
     @GetMapping("articles/{id}")
-    public ArticleDto getArticleById()throws Exception{
-
-        return null;
+    public String getArticleById(@PathVariable ("id") Long articleId) {
+        String articleTitle = articleService.getOneById(articleId);
+        String articleContent="";
+        try{
+            ReadMd readMd = new ReadMd();
+            articleContent = readMd.readMdFile(articleTitle);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    //    System.out.println(articleContent);
+        return articleContent;
     }
 
     /**
@@ -93,6 +112,7 @@ public class ForeController {
     @ApiOperation("通过文章id获取一篇文章的评论")
     @GetMapping("comments/articles/{id}")
     public List<Comment> listCOmmentByArticle(){
+
         return null;
     }
 

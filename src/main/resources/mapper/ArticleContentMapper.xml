@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.x2yu.blog.dao.ArticleContentMapper">
   <resultMap id="BaseResultMap" type="cn.x2yu.blog.entity.ArticleContent">
-    <result column="id" jdbcType="BIGINT" property="id" />
+    <id column="id" jdbcType="BIGINT" property="id" />
     <result column="article_id" jdbcType="BIGINT" property="article_id" />
     <result column="create_by" jdbcType="TIMESTAMP" property="create_by" />
     <result column="modifield_by" jdbcType="TIMESTAMP" property="modifield_by" />
@@ -77,6 +77,18 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tbl_article_content
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tbl_article_content
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.x2yu.blog.entity.ArticleContent" useGeneratedKeys="true">
     insert into tbl_article_content (article_id, create_by, modifield_by, 
       content)
@@ -114,4 +126,37 @@
       </if>
     </trim>
   </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.x2yu.blog.entity.ArticleContent">
+    update tbl_article_content
+    <set>
+      <if test="article_id != null">
+        article_id = #{article_id,jdbcType=BIGINT},
+      </if>
+      <if test="create_by != null">
+        create_by = #{create_by,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifield_by != null">
+        modifield_by = #{modifield_by,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.x2yu.blog.entity.ArticleContent">
+    update tbl_article_content
+    set article_id = #{article_id,jdbcType=BIGINT},
+      create_by = #{create_by,jdbcType=TIMESTAMP},
+      modifield_by = #{modifield_by,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.x2yu.blog.entity.ArticleContent">
+    update tbl_article_content
+    set article_id = #{article_id,jdbcType=BIGINT},
+      create_by = #{create_by,jdbcType=TIMESTAMP},
+      modifield_by = #{modifield_by,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

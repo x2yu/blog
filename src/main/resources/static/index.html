@@ -195,7 +195,7 @@
   </div>
 </script>
 
-<script>
+<script type="text/javascript">
     // 获取数据
 
     var data = {
@@ -207,7 +207,6 @@
 
     // 将数据放入模板中
     var res = template("template", data);
-    console.log(res);
 
     // 将模板放入页面中
     var i;
@@ -215,6 +214,36 @@
         document.getElementById("article_content").innerHTML += res;
     }
 
+    // 存文章ID cookie
+    setCookie("articleId",1,1);
+
+    function setCookie(articleId,cvalue,exdays)
+    {
+      var d = new Date();
+      d.setTime(d.getTime()+(exdays*24*60*60*1000));
+      var expires = "expires="+d.toGMTString();
+      document.cookie = articleId + "=" + cvalue + "; " + expires;
+    }
+
+    listArticles();
+    function listArticles() {
+      $.ajax({
+        type:"get",
+        url:"/api/articles/list",
+        dataType:"json",
+        async: true,
+        success:function (result) {
+          console.log("请求成功！！")
+              var json = result; //数组
+              $.each(json,function (index,item) {
+                  console.log(index+""+json[index].title);
+        });
+      },
+      error:function (error) {
+        console.log(error);
+      }
+    });
+    }
 </script>
 
 </body>

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.x2yu.blog.dao.CategoryInfoMapper">
   <resultMap id="BaseResultMap" type="cn.x2yu.blog.entity.CategoryInfo">
-    <result column="id" jdbcType="BIGINT" property="id" />
+    <id column="id" jdbcType="BIGINT" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="number" jdbcType="TINYINT" property="number" />
     <result column="create_by" jdbcType="TIMESTAMP" property="create_by" />
@@ -55,6 +55,16 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tbl_category_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tbl_category_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.x2yu.blog.entity.CategoryInfo" useGeneratedKeys="true">
     insert into tbl_category_info (name, number, create_by, 
       modified_by)
@@ -92,4 +102,30 @@
       </if>
     </trim>
   </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.x2yu.blog.entity.CategoryInfo">
+    update tbl_category_info
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null">
+        number = #{number,jdbcType=TINYINT},
+      </if>
+      <if test="create_by != null">
+        create_by = #{create_by,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modified_by != null">
+        modified_by = #{modified_by,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.x2yu.blog.entity.CategoryInfo">
+    update tbl_category_info
+    set name = #{name,jdbcType=VARCHAR},
+      number = #{number,jdbcType=TINYINT},
+      create_by = #{create_by,jdbcType=TIMESTAMP},
+      modified_by = #{modified_by,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

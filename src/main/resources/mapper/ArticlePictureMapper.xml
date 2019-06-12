@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.x2yu.blog.dao.ArticleInfoMapper">
-  <resultMap id="BaseResultMap" type="cn.x2yu.blog.entity.ArticleInfo">
+<mapper namespace="cn.x2yu.blog.dao.ArticlePictureMapper">
+  <resultMap id="BaseResultMap" type="cn.x2yu.blog.entity.ArticlePicture">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="summary" jdbcType="VARCHAR" property="summary" />
-    <result column="is_top" jdbcType="BIT" property="is_top" />
-    <result column="traffic" jdbcType="INTEGER" property="traffic" />
+    <result column="article_id" jdbcType="BIGINT" property="article_id" />
+    <result column="picture_url" jdbcType="VARCHAR" property="picture_url" />
     <result column="create_by" jdbcType="TIMESTAMP" property="create_by" />
     <result column="modified_by" jdbcType="TIMESTAMP" property="modified_by" />
   </resultMap>
@@ -40,16 +38,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, title, summary, is_top, traffic, create_by, modified_by
+    id, article_id, picture_url, create_by, modified_by
   </sql>
-  <select id="selectByExample" parameterType="cn.x2yu.blog.entity.ArticleInfoExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="cn.x2yu.blog.entity.ArticlePictureExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     'false' as QUERYID,
     <include refid="Base_Column_List" />
-    from tbl_article_info
+    from tbl_article_picture
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -58,37 +56,35 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
-    from tbl_article_info
+    from tbl_article_picture
     where id = #{id,jdbcType=BIGINT}
   </select>
+  <select id="selectByArticleId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tbl_article_picture
+    where article_id = #{id,jdbcType=BIGINT}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from tbl_article_info
+    delete from tbl_article_picture
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.x2yu.blog.entity.ArticleInfo" useGeneratedKeys="true">
-    insert into tbl_article_info (title, summary, is_top, 
-      traffic, create_by, modified_by
-      )
-    values (#{title,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR}, #{is_top,jdbcType=BIT}, 
-      #{traffic,jdbcType=INTEGER}, #{create_by,jdbcType=TIMESTAMP}, #{modified_by,jdbcType=TIMESTAMP}
-      )
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.x2yu.blog.entity.ArticlePicture" useGeneratedKeys="true">
+    insert into tbl_article_picture (article_id, picture_url, create_by, 
+      modified_by)
+    values (#{article_id,jdbcType=BIGINT}, #{picture_url,jdbcType=VARCHAR}, #{create_by,jdbcType=TIMESTAMP}, 
+      #{modified_by,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="cn.x2yu.blog.entity.ArticleInfo" useGeneratedKeys="true">
-    insert into tbl_article_info
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="cn.x2yu.blog.entity.ArticlePicture" useGeneratedKeys="true">
+    insert into tbl_article_picture
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="title != null">
-        title,
+      <if test="article_id != null">
+        article_id,
       </if>
-      <if test="summary != null">
-        summary,
-      </if>
-      <if test="is_top != null">
-        is_top,
-      </if>
-      <if test="traffic != null">
-        traffic,
+      <if test="picture_url != null">
+        picture_url,
       </if>
       <if test="create_by != null">
         create_by,
@@ -98,17 +94,11 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="title != null">
-        #{title,jdbcType=VARCHAR},
+      <if test="article_id != null">
+        #{article_id,jdbcType=BIGINT},
       </if>
-      <if test="summary != null">
-        #{summary,jdbcType=VARCHAR},
-      </if>
-      <if test="is_top != null">
-        #{is_top,jdbcType=BIT},
-      </if>
-      <if test="traffic != null">
-        #{traffic,jdbcType=INTEGER},
+      <if test="picture_url != null">
+        #{picture_url,jdbcType=VARCHAR},
       </if>
       <if test="create_by != null">
         #{create_by,jdbcType=TIMESTAMP},
@@ -118,20 +108,14 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.x2yu.blog.entity.ArticleInfo">
-    update tbl_article_info
+  <update id="updateByPrimaryKeySelective" parameterType="cn.x2yu.blog.entity.ArticlePicture">
+    update tbl_article_picture
     <set>
-      <if test="title != null">
-        title = #{title,jdbcType=VARCHAR},
+      <if test="article_id != null">
+        article_id = #{article_id,jdbcType=BIGINT},
       </if>
-      <if test="summary != null">
-        summary = #{summary,jdbcType=VARCHAR},
-      </if>
-      <if test="is_top != null">
-        is_top = #{is_top,jdbcType=BIT},
-      </if>
-      <if test="traffic != null">
-        traffic = #{traffic,jdbcType=INTEGER},
+      <if test="picture_url != null">
+        picture_url = #{picture_url,jdbcType=VARCHAR},
       </if>
       <if test="create_by != null">
         create_by = #{create_by,jdbcType=TIMESTAMP},
@@ -142,12 +126,10 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="cn.x2yu.blog.entity.ArticleInfo">
-    update tbl_article_info
-    set title = #{title,jdbcType=VARCHAR},
-      summary = #{summary,jdbcType=VARCHAR},
-      is_top = #{is_top,jdbcType=BIT},
-      traffic = #{traffic,jdbcType=INTEGER},
+  <update id="updateByPrimaryKey" parameterType="cn.x2yu.blog.entity.ArticlePicture">
+    update tbl_article_picture
+    set article_id = #{article_id,jdbcType=BIGINT},
+      picture_url = #{picture_url,jdbcType=VARCHAR},
       create_by = #{create_by,jdbcType=TIMESTAMP},
       modified_by = #{modified_by,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
