@@ -54,8 +54,8 @@
           <div class="card-img-overlay">
             <div class="card-content">
               <p class="text-uppercase">学习</p>
-              <h4 class="card-title mb-4"><a class="text-white" href="blog-single.html">博观约取厚积薄发</a></h4>
-              <a class="btn btn-outline-light" href="blog-single.html">read more</a>
+              <h4 class="card-title mb-4"><a class="text-white" href="article-category.html">博观约取厚积薄发</a></h4>
+              <a class="btn btn-outline-light" href="article-category.html">read more</a>
             </div>
           </div>
         </article>
@@ -66,8 +66,8 @@
           <div class="card-img-overlay">
             <div class="card-content">
               <p class="text-uppercase">读书</p>
-              <h4 class="card-title mb-4"><a class="text-white" href="blog-single.html">书中自有颜如玉</a></h4>
-              <a class="btn btn-outline-light" href="blog-single.html">read more</a>
+              <h4 class="card-title mb-4"><a class="text-white" href="article-category.html">书中自有颜如玉</a></h4>
+              <a class="btn btn-outline-light" href="article-category.html">read more</a>
             </div>
           </div>
         </article>
@@ -78,8 +78,8 @@
           <div class="card-img-overlay">
             <div class="card-content">
               <p class="text-uppercase">旅游</p>
-              <h4 class="card-title mb-4"><a class="text-white" href="blog-single.html">身体已经在路上</a></h4>
-              <a class="btn btn-outline-light" href="blog-single.html">read more</a>
+              <h4 class="card-title mb-4"><a class="text-white" href="article-category.html">身体已经在路上</a></h4>
+              <a class="btn btn-outline-light" href="article-category.html">read more</a>
             </div>
           </div>
         </article>
@@ -90,8 +90,8 @@
           <div class="card-img-overlay">
             <div class="card-content">
               <p class="text-uppercase">电影</p>
-              <h4 class="card-title mb-4"><a class="text-white" href="blog-single.html">看你看我看他</a></h4>
-              <a class="btn btn-outline-light" href="blog-single.html">read more</a>
+              <h4 class="card-title mb-4"><a class="text-white" href="article-category.html">看你看我看他</a></h4>
+              <a class="btn btn-outline-light" href="article-category.html">read more</a>
             </div>
           </div>
         </article>
@@ -102,8 +102,8 @@
           <div class="card-img-overlay">
             <div class="card-content">
               <p class="text-uppercase">杂记</p>
-              <h4 class="card-title mb-4"><a class="text-white" href="blog-single.html">心情垃圾堆</a></h4>
-              <a class="btn btn-outline-light" href="blog-single.html">read more</a>
+              <h4 class="card-title mb-4"><a class="text-white" href="article-category.html">心情垃圾堆</a></h4>
+              <a class="btn btn-outline-light" href="article-category.html">read more</a>
             </div>
           </div>
         </article>
@@ -176,8 +176,6 @@
 <!-- reading time -->
 <script src="plugins/reading-time/readingTime.min.js"></script>
 
-<!-- Main Script -->
-<script src="js/script.js"></script>
 
 
 <!-- 引入模板引擎js -->
@@ -186,57 +184,57 @@
 <script type="text/html" id="template">
   <div class="col-lg-4 col-sm-6 mb-5">
     <article class="text-center">
-      <img class="img-fluid mb-4" id="article-img" src="images/masonary-post/post-1.jpg" alt="post-thumb">
+      <img class="img-fluid mb-4" id="article-img" src="{{articleUrl}}" alt="post-thumb">
       <p class="text-uppercase mb-2">{{tag}}</p>
       <h4 class="title-border"><a class="text-dark" href="blog-single.html">{{title}}</a></h4>
       <p>{{content}}</p>
-      <a href="blog-single.html" class="btn btn-transparent">read more</a>
+      <a href="blog-single.html" class="btn btn-transparent" onclick="readmore(this)">read more</a>
+      <p class="text-uppercase mb-2" hidden>{{articleId}}</p>
     </article>
   </div>
 </script>
 
 <script type="text/javascript">
-    // 获取数据
 
-    var data = {
-        tag:"GAME",
-        title:"The Life of Game",
-        content:"人生就是一场游戏,你可以选择开始哪款游戏,但你却无法选择不开启。 你可以选择一款激烈的游戏,在你最好的年华里奋斗,洒下汗水。你也可以选择一款温和的游戏,由你..."
-    }
-
-
-    // 将数据放入模板中
-    var res = template("template", data);
-
-    // 将模板放入页面中
-    var i;
-    for (i = 0; i < 5; i++) {
-        document.getElementById("article_content").innerHTML += res;
-    }
-
-    // 存文章ID cookie
-    setCookie("articleId",1,1);
-
-    function setCookie(articleId,cvalue,exdays)
+    // 存cookie
+    function setCookie(cookieName,cvalue,exdays)
     {
       var d = new Date();
       d.setTime(d.getTime()+(exdays*24*60*60*1000));
       var expires = "expires="+d.toGMTString();
-      document.cookie = articleId + "=" + cvalue + "; " + expires;
+      document.cookie = cookieName + "=" + cvalue + "; " + expires;
     }
 
-    listArticles();
-    function listArticles() {
+    function listCategoryies() {
+
+    }
+
+      listArticles();
+      function listArticles() {
       $.ajax({
         type:"get",
         url:"/api/articles/list",
         dataType:"json",
-        async: true,
+        async: false,
         success:function (result) {
-          console.log("请求成功！！")
               var json = result; //数组
               $.each(json,function (index,item) {
-                  console.log(index+""+json[index].title);
+                //console.log(json[index].id+""+json[index].title);
+                var data = {
+                  articleId:"",
+                  tag:"",
+                  title:"",
+                  content:"",
+                  articleUrl:""
+                };
+                  data.articleId=json[index].id;
+                  data.tag=json[index].category;
+                  data.title = json[index].title;
+                  data.content = json[index].summary;
+                  data.articleUrl = json[index].pictureUrl;
+                  var res = template("template", data);
+                  document.getElementById("article_content").innerHTML += res;
+
         });
       },
       error:function (error) {
@@ -244,7 +242,20 @@
       }
     });
     }
+
+    function readmore(ob){
+        //获取read标签下一个兄弟节点的值（隐藏域用来存文章id）
+        var id = $(ob).next().text();
+        // 存文章ID cookie
+        setCookie("articleId",id,1);
+
+    }
+
 </script>
+
+<!-- Main Script -->
+<script src="js/script.js"></script>
+
 
 </body>
 </html>

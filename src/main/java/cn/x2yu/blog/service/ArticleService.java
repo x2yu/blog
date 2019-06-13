@@ -21,4 +21,6 @@ public interface ArticleService {
     ArticlePicture getPictureByArticleId(Long id);
 
     List<ArticleDto>listAll();
+
+    List<ArticleDto>listArticleByCategory(Long categoryId);
 }

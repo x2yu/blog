@@ -10,7 +10,7 @@ public class ArticleDto {
     private  String title;      //文章标题
     private  String summary;    //文章摘要
     private  String category;   //文章分类
-    private  String pictyreUrl; //文章题图URl
+    private  String pictureUrl; //文章题图URl
 
     public Long getId() {
         return id;
@@ -44,11 +44,11 @@ public class ArticleDto {
         this.category = category;
     }
 
-    public String getPictyreUrl() {
-        return pictyreUrl;
+    public String getPictureUrl() {
+        return pictureUrl;
     }
 
-    public void setPictyreUrl(String pictyreUrl) {
-        this.pictyreUrl = pictyreUrl;
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 }

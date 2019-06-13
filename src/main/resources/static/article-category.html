@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="utf-8">
+    <title>冬拾叁 | 分类</title>
+
+    <!-- mobile responsive meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- ** Plugins Needed for the Project ** -->
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="plugins/bootstrap/bootstrap.min.css">
+    <!-- slick slider -->
+    <link rel="stylesheet" href="plugins/slick/slick.css">
+    <!-- themefy-icon -->
+    <link rel="stylesheet" href="plugins/themify-icons/themify-icons.css">
+
+    <!-- Main Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!--Favicon-->
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+
+</head>
+
+<body>
+<!-- preloader -->
+<div class="preloader">
+    <div class="loader">
+        <span class="dot"></span>
+        <div class="dots">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</div>
+<!-- /preloader -->
+
+<header class="navigation"></header>
+
+
+<!-- page-title -->
+<section class="section bg-secondary">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h4>我们的目标是星辰大海。</h4>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /page-title -->
+
+<!-- blog post -->
+<section class="section">
+    <div class="container">
+        <div class="row masonry-container" id="article_content">
+
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <nav>
+                    <ul class="pagination justify-content-center align-items-center">
+                        <li class="page-item">
+                            <span class="page-link">&laquo; Previous</span>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">01</a></li>
+                        <li class="page-item active">
+                            <span class="page-link">02</span>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">03</a></li>
+                        <li class="page-item"><a class="page-link" href="#">04</a></li>
+                        <li class="page-item"><a class="page-link" href="#">05</a></li>
+                        <li class="page-item"><a class="page-link" href="#">06</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next &raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /blog post -->
+
+
+<footer class="footer"></footer>
+
+<!-- jQuery -->
+<script src="plugins/jQuery/jquery.min.js"></script>
+<!-- Bootstrap JS -->
+<script src="plugins/bootstrap/bootstrap.min.js"></script>
+<!-- slick slider -->
+<script src="plugins/slick/slick.min.js"></script>
+<!-- masonry -->
+<script src="plugins/masonry/masonry.js"></script>
+<!-- instafeed -->
+<script src="plugins/instafeed/instafeed.min.js"></script>
+<!-- smooth scroll -->
+<script src="plugins/smooth-scroll/smooth-scroll.js"></script>
+<!-- headroom -->
+<script src="plugins/headroom/headroom.js"></script>
+<!-- reading time -->
+<script src="plugins/reading-time/readingTime.min.js"></script>
+
+<!-- 引入模板引擎js -->
+<script src='js/template-web.js'></script>
+<!--制定模板 -->
+<script type="text/html" id="template">
+    <div class="col-lg-4 col-sm-6 mb-5">
+        <article class="text-center">
+            <img class="img-fluid mb-4" id="article-img" src="#" alt="post-thumb">
+            <h4 class="title-border"><a class="text-dark" href="blog-single.html">{{title}}</a></h4>
+            <p>{{content}}</p>
+            <a href="blog-single.html" class="btn btn-transparent" onclick="readmore(this)">read more</a>
+            <p class="text-uppercase mb-2" hidden>{{articleId}}</p>
+        </article>
+    </div>
+</script>
+
+
+<script type="text/javascript">
+
+    //将文章id储存到cookie中
+    function setCookie(articleId,cvalue,exdays)
+    {
+        var d = new Date();
+        d.setTime(d.getTime()+(exdays*24*60*60*1000));
+        var expires = "expires="+d.toGMTString();
+        document.cookie = articleId + "=" + cvalue + "; " + expires;
+    }
+
+    listArticles("1");
+    function listArticles(categoryId) {
+        $.ajax({
+            type:"get",
+            url:"/api/articles/list/categories/"+categoryId,
+            dataType:"json",
+            async: false,
+            success:function (result) {
+                var json = result; //数组
+                $.each(json,function (index,item) {
+                    console.log(json[index].id+""+json[index].title);
+                    var data = {
+                        articleId:"",
+                        tag:"",
+                        title:"",
+                        content:""
+                    };
+                    data.articleId=json[index].id;
+                    data.tag=json[index].category;
+                    data.title = json[index].title;
+                    data.content = json[index].summary;
+                    var res = template("template", data);
+                    document.getElementById("article_content").innerHTML += res;
+                });
+            },
+            error:function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function readmore(ob){
+        //获取read标签下一个兄弟节点的值（隐藏域用来存文章id）
+        var id = $(ob).next().text();
+        // 存文章ID cookie
+        setCookie("articleId",id,1);
+
+    }
+
+</script>
+
+<!-- Main Script -->
+<script src="js/script.js"></script>
+
+</body>
+</html>

@@ -99,11 +99,52 @@ public class ArticleServiceImpl implements ArticleService {
 
             //获取图片url
             String pictureUrl = articlePictureMapper.selectByArticleId(listArticleInfo.get(i).getId()).getPicture_url();
-            articleDto.setPictyreUrl(pictureUrl);
+            articleDto.setPictureUrl(pictureUrl);
 
             listArticleDto.add(articleDto);
         }
 
         return listArticleDto;
+    }
+
+    /**
+     * 根据分类名称（category）查询该分类下的文章
+     * */
+    @Override
+    public List<ArticleDto> listArticleByCategory(Long categoryId) {
+
+        List<ArticleDto>articleDtosByCategory = new ArrayList<>();
+
+        //根据category_id 查询和article关系数据集合
+        ArticleCategoryExample articleCategoryExample = new ArticleCategoryExample();
+        articleCategoryExample.setOrderByClause("id desc");
+        articleCategoryExample.createCriteria().andCategory_idEqualTo(categoryId);
+
+        List<ArticleCategory> articleCategories = articleCategoryMapper.selectByExample(articleCategoryExample);
+
+        //获取分类id
+        Long category_id = articleCategories.get(0).getCategory_id();
+
+        //封装返回的数据
+        for(int i=0;i<articleCategories.size();i++){
+            ArticleDto articleDto = new ArticleDto();
+            Long article_id = articleCategories.get(i).getArticle_id();
+
+            articleDto.setId(article_id);
+            articleDto.setTitle(articleInfoMapper.selectByPrimaryKey(article_id).getTitle());
+            articleDto.setSummary(articleInfoMapper.selectByPrimaryKey(article_id).getSummary());
+
+            //获取分类名称
+            String category = categoryInfoMapper.selectByPrimaryKey(category_id).getName();
+            articleDto.setCategory(category);
+
+            //获取图片url
+            String pictureUrl = articlePictureMapper.selectByArticleId(article_id).getPicture_url();
+            articleDto.setPictureUrl(pictureUrl);
+
+            articleDtosByCategory.add(articleDto);
+        }
+
+        return articleDtosByCategory;
     }
 }

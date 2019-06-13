@@ -29,9 +29,7 @@ public class ForeController {
     public List<ArticleDto> listAllArticleInfo(){
 
         List<ArticleDto> articleDtos = articleService.listAll();
-        for(ArticleDto a:articleDtos){
-            System.out.println(a.toString());
-        }
+
         return articleDtos;
     }
 
@@ -41,9 +39,11 @@ public class ForeController {
      * */
     @ApiOperation("获取一个分类下的所有文章")
     @GetMapping("articles/list/categories/{id}")
-    public List<ArticleDto> listArticleByCategory(){
+    public List<ArticleDto> listArticleByCategory(@PathVariable("id") Long id){
 
-        return null;
+        List<ArticleDto> articleDtosByCategory = articleService.listArticleByCategory(id);
+
+        return articleDtosByCategory;
     }
 
     /**
