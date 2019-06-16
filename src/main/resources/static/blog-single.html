@@ -129,16 +129,9 @@
         </div>
         <div class="widget">
           <h6 class="mb-4">CATEGORIES</h6>
-          <ul class="list-inline tag-list">
-            <li class="list-inline-item m-1"><a href="blog-single.html">ui ux</a></li>
-            <li class="list-inline-item m-1"><a href="blog-single.html">developmetns</a></li>
-            <li class="list-inline-item m-1"><a href="blog-single.html">travel</a></li>
-            <li class="list-inline-item m-1"><a href="blog-single.html">article</a></li>
-            <li class="list-inline-item m-1"><a href="blog-single.html">travel</a></li>
-            <li class="list-inline-item m-1"><a href="blog-single.html">ui ux</a></li>
-            <li class="list-inline-item m-1"><a href="blog-single.html">article</a></li>
-            <li class="list-inline-item m-1"><a href="blog-single.html">developmetns</a></li>
-          </ul>
+            <ul class="list-inline tag-list" id="simpleCategories">
+
+            </ul>
         </div>
       </div>
     </div>
@@ -167,15 +160,30 @@
 
 <!-- Main Script -->
 <script src="js/script.js"></script>
+
 <!--markdown解析-->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
+<!-- 引入模板引擎js -->
+<script src='js/template-web.js'></script>
+<!--制定模板 -->
+<script type="text/html" id="categoryTemplate">
+  <li class="list-inline-item m-1">
+    <p hidden>{{categoryId}}</p>
+    <a href="article-category.html" onclick="jumpToCategory(this)" >{{categoryName}}</a>
+  </li>
+</script>
+
+
 <script type="text/javascript">
+
 
   $(function () {
     var articleId = getCookie("articleId");
     console.log("文章id是"+articleId);
+    listSimpleCategories();
     showarticle(articleId);
+
   });
 
   //取文章Id Cookie
@@ -188,6 +196,15 @@
     else{
       return null;
     }
+  }
+
+  //将文章id储存到cookie中
+  function setCookie(Id,cvalue,exdays)
+  {
+    var d = new Date();
+    d.setTime(d.getTime()+(exdays*24*60*60*1000));
+    var expires = "expires="+d.toGMTString();
+    document.cookie = Id + "=" + cvalue + "; " + expires;
   }
 
   function showarticle(articleId) {
@@ -207,7 +224,37 @@
     });
   }
 
+  function listSimpleCategories() {
+    $.ajax({
+      type:"get",
+      url:"/api/categories/simple/list",
+      dataType:"json",
+      async: false,
+      success:function (result) {
+        var json = result; //数组
+        $.each(json,function (index,item) {
+          console.log(json[index].id+""+json[index].title);
+          var data = {
+            categoryId:"",
+            categoryName:""
+          };
+          data.categoryId=json[index].id;
+          data.categoryName=json[index].name;
+          var res = template("categoryTemplate", data);
+          document.getElementById("simpleCategories").innerHTML += res;
+        });
+      },
+      error:function (error) {
+        console.log(error);
+      }
+    });
+  }
 
+  function jumpToCategory(ob) {
+    //跳转之前将CategoryId储存
+     var categoryId = $(ob).prev().text();
+     setCookie("categoryId",categoryId,1);
+  }
 
 </script>
 

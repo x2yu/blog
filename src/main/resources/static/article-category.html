@@ -113,7 +113,7 @@
 <script type="text/html" id="template">
     <div class="col-lg-4 col-sm-6 mb-5">
         <article class="text-center">
-            <img class="img-fluid mb-4" id="article-img" src="#" alt="post-thumb">
+            <img class="img-fluid mb-4" id="article-img" src="{{articleUrl}}" alt="post-thumb">
             <h4 class="title-border"><a class="text-dark" href="blog-single.html">{{title}}</a></h4>
             <p>{{content}}</p>
             <a href="blog-single.html" class="btn btn-transparent" onclick="readmore(this)">read more</a>
@@ -125,6 +125,9 @@
 
 <script type="text/javascript">
 
+    var categoryId = getCookie("categoryId");
+    listArticles(categoryId);
+
     //将文章id储存到cookie中
     function setCookie(articleId,cvalue,exdays)
     {
@@ -134,7 +137,18 @@
         document.cookie = articleId + "=" + cvalue + "; " + expires;
     }
 
-    listArticles("1");
+    //取categoryId Cookie
+    function getCookie(name)
+    {
+        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)"); //正则匹配
+        if(arr=document.cookie.match(reg)){
+            return unescape(arr[2]);
+        }
+        else{
+            return null;
+        }
+    }
+
     function listArticles(categoryId) {
         $.ajax({
             type:"get",
@@ -149,12 +163,14 @@
                         articleId:"",
                         tag:"",
                         title:"",
-                        content:""
+                        content:"",
+                        articleUrl:""
                     };
                     data.articleId=json[index].id;
                     data.tag=json[index].category;
                     data.title = json[index].title;
                     data.content = json[index].summary;
+                    data.articleUrl = json[index].pictureUrl;
                     var res = template("template", data);
                     document.getElementById("article_content").innerHTML += res;
                 });

@@ -2,7 +2,6 @@ package cn.x2yu.blog.dao;
 
 import cn.x2yu.blog.entity.ArticlePicture;
 import cn.x2yu.blog.entity.ArticlePictureExample;
-
 import java.util.List;
 
 public interface ArticlePictureMapper {

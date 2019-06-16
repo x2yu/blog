@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="cn.x2yu.blog.entity.CategoryInfo">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="subtitle" jdbcType="VARCHAR" property="subtitle" />
     <result column="number" jdbcType="TINYINT" property="number" />
     <result column="create_by" jdbcType="TIMESTAMP" property="create_by" />
     <result column="modified_by" jdbcType="TIMESTAMP" property="modified_by" />
@@ -38,7 +39,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, number, create_by, modified_by
+    id, name, subtitle, number, create_by, modified_by
   </sql>
   <select id="selectByExample" parameterType="cn.x2yu.blog.entity.CategoryInfoExample" resultMap="BaseResultMap">
     select
@@ -66,16 +67,19 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.x2yu.blog.entity.CategoryInfo" useGeneratedKeys="true">
-    insert into tbl_category_info (name, number, create_by, 
-      modified_by)
-    values (#{name,jdbcType=VARCHAR}, #{number,jdbcType=TINYINT}, #{create_by,jdbcType=TIMESTAMP}, 
-      #{modified_by,jdbcType=TIMESTAMP})
+    insert into tbl_category_info (name, subtitle, number, 
+      create_by, modified_by)
+    values (#{name,jdbcType=VARCHAR}, #{subtitle,jdbcType=VARCHAR}, #{number,jdbcType=TINYINT}, 
+      #{create_by,jdbcType=TIMESTAMP}, #{modified_by,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="cn.x2yu.blog.entity.CategoryInfo" useGeneratedKeys="true">
     insert into tbl_category_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="name != null">
         name,
+      </if>
+      <if test="subtitle != null">
+        subtitle,
       </if>
       <if test="number != null">
         number,
@@ -90,6 +94,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="subtitle != null">
+        #{subtitle,jdbcType=VARCHAR},
       </if>
       <if test="number != null">
         #{number,jdbcType=TINYINT},
@@ -108,6 +115,9 @@
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
+      <if test="subtitle != null">
+        subtitle = #{subtitle,jdbcType=VARCHAR},
+      </if>
       <if test="number != null">
         number = #{number,jdbcType=TINYINT},
       </if>
@@ -123,6 +133,7 @@
   <update id="updateByPrimaryKey" parameterType="cn.x2yu.blog.entity.CategoryInfo">
     update tbl_category_info
     set name = #{name,jdbcType=VARCHAR},
+      subtitle = #{subtitle,jdbcType=VARCHAR},
       number = #{number,jdbcType=TINYINT},
       create_by = #{create_by,jdbcType=TIMESTAMP},
       modified_by = #{modified_by,jdbcType=TIMESTAMP}

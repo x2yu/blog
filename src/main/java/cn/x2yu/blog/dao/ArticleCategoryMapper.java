@@ -4,7 +4,6 @@ import cn.x2yu.blog.entity.ArticleCategory;
 import cn.x2yu.blog.entity.ArticleCategoryExample;
 import java.util.List;
 
-
 public interface ArticleCategoryMapper {
     int deleteByPrimaryKey(Long id);
 

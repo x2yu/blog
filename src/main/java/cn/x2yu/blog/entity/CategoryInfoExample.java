@@ -235,6 +235,76 @@ public class CategoryInfoExample {
             return (Criteria) this;
         }
 
+        public Criteria andSubtitleIsNull() {
+            addCriterion("subtitle is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubtitleIsNotNull() {
+            addCriterion("subtitle is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubtitleEqualTo(String value) {
+            addCriterion("subtitle =", value, "subtitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubtitleNotEqualTo(String value) {
+            addCriterion("subtitle <>", value, "subtitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubtitleGreaterThan(String value) {
+            addCriterion("subtitle >", value, "subtitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubtitleGreaterThanOrEqualTo(String value) {
+            addCriterion("subtitle >=", value, "subtitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubtitleLessThan(String value) {
+            addCriterion("subtitle <", value, "subtitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubtitleLessThanOrEqualTo(String value) {
+            addCriterion("subtitle <=", value, "subtitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubtitleLike(String value) {
+            addCriterion("subtitle like", value, "subtitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubtitleNotLike(String value) {
+            addCriterion("subtitle not like", value, "subtitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubtitleIn(List<String> values) {
+            addCriterion("subtitle in", values, "subtitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubtitleNotIn(List<String> values) {
+            addCriterion("subtitle not in", values, "subtitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubtitleBetween(String value1, String value2) {
+            addCriterion("subtitle between", value1, value2, "subtitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubtitleNotBetween(String value1, String value2) {
+            addCriterion("subtitle not between", value1, value2, "subtitle");
+            return (Criteria) this;
+        }
+
         public Criteria andNumberIsNull() {
             addCriterion("number is null");
             return (Criteria) this;

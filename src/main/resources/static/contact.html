@@ -65,7 +65,7 @@
             <textarea name="message" id="message" class="form-control mb-4" placeholder="想说点什么..."></textarea>
           </div>
           <div class="col-12">
-            <button class="btn btn-primary">送    信</button>
+            <button class="btn btn-primary" onclick="setMessage()" >送    信</button>
           </div>
         </form>
       </div>
@@ -103,6 +103,41 @@
 
 <!-- Main Script -->
 <script src="js/script.js"></script>
+
+<script>
+ function setMessage() {
+
+    var name = $("#name").val();
+    var email = $("#email").val();
+    var content = $("#message").val();
+
+    var data = {
+      name:"aaaa",
+      email:"374439529@qq.com",
+      content:"11111111111111"
+    };
+     data.name = name;
+     data.email = email;
+     data.content = content;
+
+    $.ajax({
+      type:"post",
+      url:"/api/comments",
+      cache: false,  //禁用缓存
+      data:JSON.stringify(data),
+      contentType: "application/json;charset=utf-8",
+      async:false,
+      success:function (result) {
+
+      },
+      error:function(error){
+        console.log(error);
+      }
+    });
+   //禁用按钮的提交
+    return false;
+ }
+</script>
 
 </body>
 </html>

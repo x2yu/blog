@@ -2,7 +2,6 @@ package cn.x2yu.blog.dao;
 
 import cn.x2yu.blog.entity.SysView;
 import cn.x2yu.blog.entity.SysViewExample;
-
 import java.util.List;
 
 public interface SysViewMapper {

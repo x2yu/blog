@@ -2,8 +2,8 @@ package cn.x2yu.blog.dao;
 
 import cn.x2yu.blog.entity.SysLog;
 import cn.x2yu.blog.entity.SysLogExample;
-
 import java.util.List;
+
 public interface SysLogMapper {
     int deleteByPrimaryKey(Long id);
 

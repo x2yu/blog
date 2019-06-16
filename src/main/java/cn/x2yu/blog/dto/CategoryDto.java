@@ -1,19 +1,11 @@
-package cn.x2yu.blog.entity;
+package cn.x2yu.blog.dto;
 
-import java.util.Date;
-
-public class CategoryInfo {
+public class CategoryDto {
     private Long id;
-
     private String name;
-
     private String subtitle;
-
     private Byte number;
-
-    private Date create_by;
-
-    private Date modified_by;
+    private String pictureUrl;
 
     public Long getId() {
         return id;
@@ -28,7 +20,7 @@ public class CategoryInfo {
     }
 
     public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+        this.name = name;
     }
 
     public String getSubtitle() {
@@ -36,7 +28,7 @@ public class CategoryInfo {
     }
 
     public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle == null ? null : subtitle.trim();
+        this.subtitle = subtitle;
     }
 
     public Byte getNumber() {
@@ -47,19 +39,11 @@ public class CategoryInfo {
         this.number = number;
     }
 
-    public Date getCreate_by() {
-        return create_by;
+    public String getPictureUrl() {
+        return pictureUrl;
     }
 
-    public void setCreate_by(Date create_by) {
-        this.create_by = create_by;
-    }
-
-    public Date getModified_by() {
-        return modified_by;
-    }
-
-    public void setModified_by(Date modified_by) {
-        this.modified_by = modified_by;
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 }

@@ -56,7 +56,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select
+    select 
     <include refid="Base_Column_List" />
     from tbl_article_picture
     where id = #{id,jdbcType=BIGINT}
