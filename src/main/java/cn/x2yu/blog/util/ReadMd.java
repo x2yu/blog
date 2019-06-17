@@ -2,11 +2,13 @@ package cn.x2yu.blog.util;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
+@Service
 public class ReadMd {
 
     public String readMdFile(String filename)throws Exception{

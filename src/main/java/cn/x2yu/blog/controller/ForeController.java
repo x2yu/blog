@@ -1,9 +1,9 @@
 package cn.x2yu.blog.controller;
 
 import cn.x2yu.blog.dto.ArticleDto;
+import cn.x2yu.blog.dto.ArticleSimpleDto;
 import cn.x2yu.blog.dto.CategoryDto;
 import cn.x2yu.blog.dto.CategorySimpleDto;
-import cn.x2yu.blog.entity.CategoryInfo;
 import cn.x2yu.blog.entity.Comment;
 import cn.x2yu.blog.service.ArticleService;
 import cn.x2yu.blog.service.CategoryService;
@@ -14,9 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 前端控制器
@@ -31,6 +30,8 @@ public class ForeController {
     CategoryService categoryService;
     @Autowired
     CommentService commentService;
+    @Autowired
+    ReadMd readMd;
     /**
      * 获取所有文章
      * */
@@ -65,7 +66,6 @@ public class ForeController {
         String articleTitle = articleService.getOneById(articleId);
         String articleContent="";
         try{
-            ReadMd readMd = new ReadMd();
             articleContent = readMd.readMdFile(articleTitle);
         }catch (Exception e){
             e.printStackTrace();
@@ -73,6 +73,18 @@ public class ForeController {
     //    System.out.println(articleContent);
         return articleContent;
     }
+
+    /**
+     * 获取最新发布的三篇文章
+     * */
+    @ApiOperation("获取最新发布的三篇文章")
+    @GetMapping("articles/list/latest")
+    public List<ArticleSimpleDto> listArticleSimple(){
+        List<ArticleSimpleDto>articleSimpleDtos = new ArrayList<>();
+        articleSimpleDtos = articleService.listArticleSimple();
+        return articleSimpleDtos;
+    }
+
 
     /**
      * 模糊查询获取文章

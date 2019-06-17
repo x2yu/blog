@@ -5,12 +5,15 @@ import cn.x2yu.blog.dao.ArticleInfoMapper;
 import cn.x2yu.blog.dao.ArticlePictureMapper;
 import cn.x2yu.blog.dao.CategoryInfoMapper;
 import cn.x2yu.blog.dto.ArticleDto;
+import cn.x2yu.blog.dto.ArticleSimpleDto;
 import cn.x2yu.blog.entity.*;
 import cn.x2yu.blog.service.ArticleService;
+import cn.x2yu.blog.util.FormatFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,6 +32,8 @@ public class ArticleServiceImpl implements ArticleService {
     ArticleCategoryMapper articleCategoryMapper;
     @Autowired
     CategoryInfoMapper categoryInfoMapper;
+    @Autowired
+    FormatFile formatFile;
 
     public ArticleServiceImpl(){
 
@@ -86,9 +91,15 @@ public class ArticleServiceImpl implements ArticleService {
 
         for(int i =0;i<listArticleInfo.size();i++){
             ArticleDto articleDto = new ArticleDto();
-            articleDto.setId(listArticleInfo.get(i).getId());
-            articleDto.setTitle(listArticleInfo.get(i).getTitle());
-            articleDto.setSummary(listArticleInfo.get(i).getSummary());
+            Long articleId = listArticleInfo.get(i).getId();
+            String title = listArticleInfo.get(i).getTitle();
+            title = formatFile.formatArticleTitle(title);
+            String summary = listArticleInfo.get(i).getSummary();
+
+
+            articleDto.setId(articleId);
+            articleDto.setTitle(title);
+            articleDto.setSummary(summary);
 
             //先根据文章id获取文章和分类的关系表数据，在根据category_id查询分类名称
             ArticleCategory articleCategory = articleCategoryMapper.selectByArticleId(listArticleInfo.get(i).getId());
@@ -122,6 +133,9 @@ public class ArticleServiceImpl implements ArticleService {
 
         List<ArticleCategory> articleCategories = articleCategoryMapper.selectByExample(articleCategoryExample);
 
+        if(articleCategories.size()==0){
+            return null;
+        }else {
         //获取分类id
         Long category_id = articleCategories.get(0).getCategory_id();
 
@@ -129,10 +143,13 @@ public class ArticleServiceImpl implements ArticleService {
         for(int i=0;i<articleCategories.size();i++){
             ArticleDto articleDto = new ArticleDto();
             Long article_id = articleCategories.get(i).getArticle_id();
+            String title = articleInfoMapper.selectByPrimaryKey(article_id).getTitle();
+            title = formatFile.formatArticleTitle(title);
+            String summary = articleInfoMapper.selectByPrimaryKey(article_id).getSummary();
 
             articleDto.setId(article_id);
-            articleDto.setTitle(articleInfoMapper.selectByPrimaryKey(article_id).getTitle());
-            articleDto.setSummary(articleInfoMapper.selectByPrimaryKey(article_id).getSummary());
+            articleDto.setTitle(title);
+            articleDto.setSummary(summary);
 
             //获取分类名称
             String category = categoryInfoMapper.selectByPrimaryKey(category_id).getName();
@@ -145,6 +162,46 @@ public class ArticleServiceImpl implements ArticleService {
             articleDtosByCategory.add(articleDto);
         }
 
+            }
+
         return articleDtosByCategory;
+    }
+
+    /**
+     * 查询用于展示最新文章的简单文章数据体
+     * */
+    @Override
+    public List<ArticleSimpleDto> listArticleSimple() {
+
+        List<ArticleSimpleDto>articleSimpleDtos = new ArrayList<>();
+
+        List<ArticleInfo> articleInfos = new ArrayList<>();
+        ArticleInfoExample articleInfoExample = new ArticleInfoExample();
+        articleInfoExample.setOrderByClause("create_by desc");
+        articleInfos = articleInfoMapper.selectByExample(articleInfoExample);
+
+        if(articleInfos.size()==0){
+            return null;
+        }else {
+            //限制查询三条数据，避免越界访问
+            for(int i = 0;i<articleInfos.size() && i<3;i++){
+                Long articleId = articleInfos.get(i).getId();
+                String title = articleInfos.get(i).getTitle();
+                title = formatFile.formatArticleTitle(title);
+                Date create_by = articleInfos.get(i).getCreate_by();
+                String newDate = formatFile.formatDate(create_by);
+
+                String pictureUrl = articlePictureMapper.selectByArticleId(articleId).getPicture_url();
+
+                ArticleSimpleDto articleSimpleDto = new ArticleSimpleDto();
+                articleSimpleDto.setId(articleId);
+                articleSimpleDto.setTitle(title);
+                articleSimpleDto.setCreate_by(newDate);
+                articleSimpleDto.setPictureUrl(pictureUrl);
+
+                articleSimpleDtos.add(articleSimpleDto);
+            }
+        }
+        return articleSimpleDtos;
     }
 }

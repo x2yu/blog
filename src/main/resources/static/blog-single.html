@@ -20,6 +20,9 @@
   <!-- Main Stylesheet -->
   <link href="css/style.css" rel="stylesheet">
 
+  <!-- maekwdown -->
+  <link rel="stylesheet" href="css/markdown.css">
+
   <!--Favicon-->
   <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
   <link rel="icon" href="images/favicon.ico" type="image/x-icon">
@@ -77,59 +80,19 @@
         </div>
         <div class="widget">
           <h6 class="mb-4">LATEST POST</h6>
-          <div class="media mb-4">
-            <div class="post-thumb-sm mr-3">
-              <img class="img-fluid" src="images/masonary-post/post-1.jpg" alt="post-thumb">
-            </div>
-            <div class="media-body">
-              <ul class="list-inline d-flex justify-content-between mb-2">
-                <li class="list-inline-item">Post By Jhon</li>
-                <li class="list-inline-item">June 2, 2018</li>
-              </ul>
-              <h6><a class="text-dark" href="blog-single.html">Lorem ipsum dolor sit amet, consectetur</a></h6>
-            </div>
-          </div>
-          <div class="media mb-4">
-            <div class="post-thumb-sm mr-3">
-              <img class="img-fluid" src="images/masonary-post/post-6.jpg" alt="post-thumb">
-            </div>
-            <div class="media-body">
-              <ul class="list-inline d-flex justify-content-between mb-2">
-                <li class="list-inline-item">Post By Jhon</li>
-                <li class="list-inline-item">June 2, 2018</li>
-              </ul>
-              <h6><a class="text-dark" href="blog-single.html">Lorem ipsum dolor sit amet, consectetur</a></h6>
-            </div>
-          </div>
-          <div class="media mb-4">
-            <div class="post-thumb-sm mr-3">
-              <img class="img-fluid" src="images/masonary-post/post-3.jpg" alt="post-thumb">
-            </div>
-            <div class="media-body">
-              <ul class="list-inline d-flex justify-content-between mb-2">
-                <li class="list-inline-item">Post By Jhon</li>
-                <li class="list-inline-item">June 2, 2018</li>
-              </ul>
-              <h6><a class="text-dark" href="blog-single.html">Lorem ipsum dolor sit amet, consectetur</a></h6>
-            </div>
+          <div id="latest_post">
+
           </div>
         </div>
         <div class="widget">
           <h6 class="mb-4">TAG</h6>
           <ul class="list-inline tag-list">
-            <li class="list-inline-item m-1"><a href="blog-single.html">ui ux</a></li>
-            <li class="list-inline-item m-1"><a href="blog-single.html">developmetns</a></li>
-            <li class="list-inline-item m-1"><a href="blog-single.html">travel</a></li>
-            <li class="list-inline-item m-1"><a href="blog-single.html">article</a></li>
-            <li class="list-inline-item m-1"><a href="blog-single.html">travel</a></li>
-            <li class="list-inline-item m-1"><a href="blog-single.html">ui ux</a></li>
-            <li class="list-inline-item m-1"><a href="blog-single.html">article</a></li>
-            <li class="list-inline-item m-1"><a href="blog-single.html">developmetns</a></li>
+            <li class="list-inline-item m-1"><a href="blog-single.html">暂定</a></li>
           </ul>
         </div>
         <div class="widget">
           <h6 class="mb-4">CATEGORIES</h6>
-            <ul class="list-inline tag-list" id="simpleCategories">
+            <ul class="list-inline tag-list" id="simple_categories">
 
             </ul>
         </div>
@@ -174,6 +137,21 @@
   </li>
 </script>
 
+<script type="text/html" id="latestArticleTemplate">
+  <div class="media mb-4">
+    <div class="post-thumb-sm mr-3">
+      <img class="img-fluid" src="{{pictureUrl}}" alt="post-thumb">
+    </div>
+    <div class="media-body">
+      <ul class="list-inline d-flex justify-content-between mb-2">
+        <li class="list-inline-item">发布日期：</li>
+        <li class="list-inline-item">{{create_by}}</li>
+      </ul>
+      <h6><a class="text-dark" href="blog-single.html">{{title}}</a></h6>
+    </div>
+  </div>
+</script>
+
 
 <script type="text/javascript">
 
@@ -181,6 +159,7 @@
   $(function () {
     var articleId = getCookie("articleId");
     console.log("文章id是"+articleId);
+    listLatestArticle();
     listSimpleCategories();
     showarticle(articleId);
 
@@ -233,7 +212,6 @@
       success:function (result) {
         var json = result; //数组
         $.each(json,function (index,item) {
-          console.log(json[index].id+""+json[index].title);
           var data = {
             categoryId:"",
             categoryName:""
@@ -241,7 +219,7 @@
           data.categoryId=json[index].id;
           data.categoryName=json[index].name;
           var res = template("categoryTemplate", data);
-          document.getElementById("simpleCategories").innerHTML += res;
+          document.getElementById("simple_categories").innerHTML += res;
         });
       },
       error:function (error) {
@@ -254,6 +232,35 @@
     //跳转之前将CategoryId储存
      var categoryId = $(ob).prev().text();
      setCookie("categoryId",categoryId,1);
+  }
+
+  function listLatestArticle(){
+    $.ajax({
+      type: "get",
+      url: "/api/articles/list/latest",
+      dataType: "json",
+      async: false,
+      success: function (result) {
+        var json = result; //数组
+        $.each(json, function (index, item) {
+          var data = {
+            articleId: "",
+            title: "",
+            create_by: "",
+            pictureUrl: ""
+          };
+          data.articleId = json[index].id;
+          data.title = json[index].title;
+          data.create_by = json[index].create_by;
+          data.pictureUrl = json[index].pictureUrl;
+          var res = template("latestArticleTemplate", data);
+          document.getElementById("latest_post").innerHTML += res;
+        });
+      },
+      error: function (error) {
+        console.log(error);
+      }
+    });
   }
 
 </script>

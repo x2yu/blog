@@ -155,6 +155,7 @@ public boolean add(E e) {
 HashSet的去重复就是根据HashMap实现的，而HashMap的实现又完全依赖于hashcode和equals方法。
 
 > String中的equals()方法和hashCode()方法源码
+
 **equals()**
 ```
 public boolean equals(Object anObject) {

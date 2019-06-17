@@ -1,5 +1,8 @@
 package cn.x2yu.blog.dto;
 
+/**
+ * 简单分类标签数据对象
+ * */
 public class CategorySimpleDto {
     private String name;
     private Long id;

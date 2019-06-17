@@ -2,6 +2,7 @@ package cn.x2yu.blog.service;
 
 
 import cn.x2yu.blog.dto.ArticleDto;
+import cn.x2yu.blog.dto.ArticleSimpleDto;
 import cn.x2yu.blog.entity.ArticlePicture;
 
 import java.util.List;
@@ -23,4 +24,6 @@ public interface ArticleService {
     List<ArticleDto>listAll();
 
     List<ArticleDto>listArticleByCategory(Long categoryId);
+
+    List<ArticleSimpleDto>listArticleSimple();
 }
