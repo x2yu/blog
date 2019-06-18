@@ -145,8 +145,8 @@
 
 /* homepage 2 */
 .hero-section {
-  padding: 70px 0 0;
-  background-image: linear-gradient(#fff 45%, $secondary-color 0);
+  padding: 0px 0 0;
+  background-image: linear-gradient(#fff 45%, #cedae6 0);
 }
 
 .dividers {
@@ -197,7 +197,7 @@
   }
 
   .post-content {
-    width: 50%;
+    width: 90%;
 
     @include tablet {
       width: 100%;

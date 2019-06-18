@@ -27,18 +27,18 @@
 </head>
 
 <body>
-  <!-- preloader -->
-  <div class="preloader">
-    <div class="loader">
-      <span class="dot"></span>
-      <div class="dots">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
+<!-- preloader -->
+<div class="preloader">
+  <div class="loader">
+    <span class="dot"></span>
+    <div class="dots">
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
   </div>
-  <!-- /preloader -->
+</div>
+<!-- /preloader -->
 
 <!-- dividers -->
 <div class="dividers">
@@ -66,9 +66,6 @@
           <li class="list-inline-item mx-3"><a href="#" class="text-dark"><i class="ti-linkedin"></i></a></li>
           <li class="list-inline-item mx-3"><a href="#" class="text-dark"><i class="ti-github"></i></a></li>
         </ul>
-      </div>
-      <div class="col-lg-6 text-right">
-        <img class="img-fluid" src="images/banner-img.png" alt="banner-image">
       </div>
     </div>
   </div>
@@ -111,7 +108,7 @@
 <section>
   <div class="container-fluid px-0">
     <div class="row no-gutters instagram-slider" id="instafeed" data-userId="4044026246"
-      data-accessToken="4044026246.1677ed0.8896752506ed4402a0519d23b8f50a17"></div>
+         data-accessToken="4044026246.1677ed0.8896752506ed4402a0519d23b8f50a17"></div>
   </div>
 </section>
 <!-- /instagram -->
@@ -172,81 +169,42 @@
 <script src='js/template-web.js'></script>
 <!--制定模板 -->
 <script type="text/html" id="template">
-  <div class="col-12 mb-100">
+  <div class="col-12 mb-50">
     <article data-file="articles/b.html" data-target="article" class="article-full-width ">
-      <div class="post-image">
-        <img class="img-fluid" src="images/masonary-post/post-2.jpg" alt="post-thumb">
-      </div>
       <div class="post-content">
         <ul class="list-inline d-flex justify-content-between border-bottom post-meta pb-2 mb-4">
           <li class="list-inline-item"><i class="ti-calendar mr-2"></i>{{calender}}</li>
-          <li class="list-inline-item"><i class="ti-alarm-clock mr-2"></i><span class="eta">{{readtime}}</span> read</li>
         </ul>
         <h4 class="mb-4"><a href="blog-single.html" class="text-dark">{{title}}</a></h4>
         <p class="mb-0 post-summary">{{content}}</p>
         <a class="btn btn-transparent mb-4" href="blog-single.html">Continue...</a>
-        <div class="author">
-          <span class="d-block">Post by</span>
-          <p>{{author}}</p>
-        </div>
-      </div>
-    </article>
-  </div>
-</script>
-
-  <script type="text/html" id="template-right">
-  <div class="col-12 mb-100">
-    <article data-file="articles/b.html" data-target="article" class="article-full-width article-right">
-      <div class="post-image">
-        <img class="img-fluid" src="images/masonary-post/post-12.jpg" alt="post-thumb">
-      </div>
-      <div class="post-content">
-        <ul class="list-inline d-flex justify-content-between border-bottom post-meta pb-2 mb-4">
-          <li class="list-inline-item"><i class="ti-calendar mr-2"></i>{{calender}}</li>
-          <li class="list-inline-item"><i class="ti-alarm-clock mr-2"></i><span class="eta">{{readtime}}</span> read</li>
-        </ul>
-        <h4 class="mb-4"><a href="blog-single.html" class="text-dark">{{title}}</a></h4>
-        <p class="mb-0 post-summary">{{content}}</p>
-        <a class="btn btn-transparent mb-4" href="blog-single.html">Continue...</a>
-        <div class="author">
-          <span class="d-block">Post by</span>
-          <p>{{author}}</p>
-        </div>
+        <p hidden>{{articleId}}</p>
       </div>
     </article>
   </div>
 </script>
 
 <script>
-    // 获取数据
+  // 获取数据
 
-    var data = {
-        calender:"June 10, 2019",
-        readtime:"8 min",
-        title:"The Life of Game",
-        content:"人生就是一场游戏,你可以选择开始哪款游戏,但你却无法选择不开启。 你可以选择一款激烈的游戏,在你最好的年华里奋斗,洒下汗水。你也可以选择一款温和的游戏,由你...",
-        author:"x2yu"
-    }
+  var data = {
+    calender:"June 10, 2019",
+    title:"The Life of Game",
+    content:"人生就是一场游戏,你可以选择开始哪款游戏,但你却无法选择不开启。 你可以选择一款激烈的游戏,在你最好的年华里奋斗,洒下汗水。你也可以选择一款温和的游戏,由你...",
+  }
 
 
-    // 将数据放入模板中
+  // 将数据放入模板中
 
-    //console.log(res);
 
-    // 将模板放入页面中
-    var i;
+  // 将模板放入页面中
+  var i;
 
-    for (i = 0; i < 5; i++) {
-        if(i%2==0)
-        {
-            var res = template("template", data);
-            document.getElementById("article-container").innerHTML += res;
+  for (i = 0; i < 5; i++) {
 
-        }else{
-            var res2 = template("template-right", data);
-            document.getElementById("article-container").innerHTML += res2;
-        }
-    }
+    var res = template("template", data);
+    document.getElementById("article-container").innerHTML += res;
+  }
 
 </script>
 

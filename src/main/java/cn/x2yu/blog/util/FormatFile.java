@@ -13,9 +13,8 @@ public class FormatFile {
      * */
     public String formatDate(Date date){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy,MM dd");
-
         String newDate = sdf.format(date);
-        System.out.println(newDate);
+
         return newDate;
     }
 

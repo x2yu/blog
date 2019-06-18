@@ -51,7 +51,7 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-12">
-        <h4>我们的目标是星辰大海。</h4>
+        <h2>我们的目标是星辰大海。</h2>
       </div>
     </div>
   </div>
@@ -127,7 +127,7 @@
 <!--markdown解析-->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-<!-- 引入模板引擎js -->
+<!--引入模板引擎js-->
 <script src='js/template-web.js'></script>
 <!--制定模板 -->
 <script type="text/html" id="categoryTemplate">
@@ -147,7 +147,10 @@
         <li class="list-inline-item">发布日期：</li>
         <li class="list-inline-item">{{create_by}}</li>
       </ul>
-      <h6><a class="text-dark" href="blog-single.html">{{title}}</a></h6>
+      <h6>
+        <p id="article_id" hidden>{{articleId}}</p>
+        <a class="text-dark" href="blog-single.html" onclick="jumpToArticle(this)">{{title}}</a>
+      </h6>
     </div>
   </div>
 </script>
@@ -261,6 +264,11 @@
         console.log(error);
       }
     });
+  }
+
+  function jumpToArticle(ob){
+    var articleId = $(ob).prev().text();
+    setCookie("articleId",articleId,1);
   }
 
 </script>

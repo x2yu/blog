@@ -128,7 +128,10 @@
     <article class="text-center">
       <img class="img-fluid mb-4" id="article-img" src="{{articleUrl}}" alt="post-thumb">
       <p class="text-uppercase mb-2">{{tag}}</p>
-      <h4 class="title-border"><a class="text-dark" href="blog-single.html">{{title}}</a></h4>
+      <h4 class="title-border">
+        <a class="text-dark" href="blog-single.html" onclick="articleRead(this)">{{title}}</a>
+        <p hidden>{{articleId}}</p>
+      </h4>
       <p>{{content}}</p>
       <a href="blog-single.html" class="btn btn-transparent" onclick="articleRead(this)">read more</a>
       <p hidden>{{articleId}}</p>
@@ -235,12 +238,13 @@
     var articleId = $(ob).next().text();
     // 存文章ID cookie
     setCookie("articleId",articleId,1);
-
   }
 
-  function categoryRead(ob) {
-    var categoryId = $(ob).next().text();
-    setCookie("categoryId",categoryId,1);
+  function titleRead(ob) {
+
+    var articleId = $(ob).next().next().next().text();
+    // 存文章ID cookie
+    setCookie("articleId",articleId,1);
   }
 
 </script>

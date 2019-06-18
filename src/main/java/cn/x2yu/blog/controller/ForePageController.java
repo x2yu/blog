@@ -24,12 +24,6 @@ public class ForePageController {
         return mav;
     }
 
-    @GetMapping("/blog-single")
-    public ModelAndView blogsingle(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        ModelAndView mav = new ModelAndView("blogsingle.html");
-        return mav;
-    }
-
     @GetMapping("/contact")
     public ModelAndView contact(HttpServletRequest request, HttpServletResponse response) throws Exception {
         ModelAndView mav = new ModelAndView("contact.html");

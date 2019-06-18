@@ -90,6 +90,7 @@
                 <!-- src/main/resources下的指定资源放行 -->
                 <includes>
                     <include>**/*.**</include>
+                    <include>**/**/*.**</include>
                 </includes>
                 <filtering>false</filtering>
             </resource>

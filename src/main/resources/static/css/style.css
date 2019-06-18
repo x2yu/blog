@@ -652,8 +652,8 @@ textarea.form-control {
 
 /* homepage 2 */
 .hero-section {
-  padding: 70px 0 0;
-  background-image: linear-gradient(#fff 45%, #fdefe6 0);
+  padding: 0px 0 0;
+  background-image: linear-gradient(#fff 45%, #cedae6 0);
 }
 
 .dividers {
@@ -712,7 +712,7 @@ textarea.form-control {
 }
 
 .article-full-width .post-content {
-  width: 50%;
+  width: 90%;
 }
 
 @media (max-width: 767px) {
