@@ -78,6 +78,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a class="nav-link " href="admin-category.html">
+                  <i class="material-icons">vertical_split</i>
+                  <span>文章分类</span>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link active" href="components-blog-posts.html">
                   <i class="material-icons">vertical_split</i>
                   <span>文章</span>
@@ -231,6 +237,50 @@
         </main>
       </div>
     </div>
+
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title" id="myModalLabel">编辑文章</h3>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group col-md-12">
+              <label >文章标题：</label>
+              <input type="text" class="form-control" id="" placeholder=""> </div>
+            <div class="form-group col-md-12">
+              <label >文章摘要</label>
+              <input type="text" class="form-control" id="" placeholder=""> </div>
+            <div class="form-group col-md-12">
+              <label >文章题图</label>
+              <input type="text" class="form-control" id="" placeholder=""> </div>
+            <div class="form-group col-md-12">
+              <label >文章分类</label>
+              <select id="inputState" class="form-control">
+                <option selected="">学习</option>
+                <option>读书</option>
+                <option>电影</option>
+                <option>旅游</option>
+                <option>杂记</option>
+              </select>
+            </div>
+
+            <div class="form-group col-md-12">
+              <label >正文：</label>
+              <textarea class="form-control" name="feDescription" rows="5">###################</textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary">更新</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
@@ -247,7 +297,7 @@
 
         <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
             <div class="card card-small card-post card-post--1">
-                <div class="card-post__image" src="{{articleUrl}}">
+                <div class="card-post__image" style="background-image: url('{{articleUrl}}');">
                     <a href="#" class="card-post__category badge badge-pill badge-dark">{{tag}}</a>
                 </div>
                 <div class="card-body">
@@ -257,6 +307,16 @@
                     </h5>
                     <p class="card-text d-inline-block mb-3">{{content}}</p>
                     <span class="text-muted">28 February 2019</span>
+                    <div class="col text-right view-report">
+                    <a href="#">
+                              <span class="text-danger">
+                                <i class="material-icons">clear</i>
+                              </span> 删除 </a>
+                    <a href="#" data-toggle="modal" data-target="#editModal">
+                              <span class="text-light">
+                                <i class="material-icons">more_vert</i>
+                              </span> 编辑 </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -269,7 +329,7 @@
                 type:"get",
                 url:"/api/articles/list",
                 dataType:"json",
-                async: false,
+                async: true,
                 success:function (result) {
                     var json = result; //数组
                     $.each(json,function (index,item) {
