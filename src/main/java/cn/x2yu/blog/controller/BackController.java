@@ -1,7 +1,9 @@
 package cn.x2yu.blog.controller;
 
 import cn.x2yu.blog.entity.CategoryInfo;
+import cn.x2yu.blog.service.CommentService;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -10,7 +12,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/admin")
 public class BackController {
-
+    @Autowired
+    CommentService commentService;
     /**
      * 增加一篇文章
      */
@@ -75,6 +78,7 @@ public class BackController {
     @ApiOperation("根据id删除分类")
     @DeleteMapping("categories/{id}")
     public String deleteCategory(){
+
         return null;
     }
 
@@ -114,7 +118,8 @@ public class BackController {
      * */
     @ApiOperation("通过id删除一条留言")
     @DeleteMapping("comments/{id}")
-    public String deleteComment(){
+    public String deleteComment(@PathVariable ("id") Long commentId){
+        commentService.deleteComment(commentId);
         return null;
     }
 

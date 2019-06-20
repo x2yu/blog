@@ -78,13 +78,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="admin-category.html">
+                        <a class="nav-link " href="admin-category.html">
                             <i class="material-icons">vertical_split</i>
                             <span>文章分类</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="components-blog-posts.html">
+                        <a class="nav-link " href="components-blog-posts.html">
                             <i class="material-icons">vertical_split</i>
                             <span>文章</span>
                         </a>
@@ -102,13 +102,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link " href="tables.html">
+                        <a class="nav-link" href="tables.html">
                             <i class="material-icons">table_chart</i>
                             <span>表格</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="admin_comment.html">
+                        <a class="nav-link active" href="admin_comment.html">
                             <i class="material-icons">insert_comment</i>
                             <span>留言</span>
                         </a>
@@ -208,21 +208,40 @@
                 <!-- Page Header -->
                 <div class="page-header row no-gutters py-4">
                     <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
-                        <span class="text-uppercase page-subtitle">Components</span>
-                        <h3 class="page-title mb-3">Article Categories</h3>
-                        <div>
-                            <button class="mb-10 btn btn-white mr-2" data-toggle="modal" data-target="#addModal" ><i class="material-icons">add</i> 新增分类</button>
-                        </div>
+                        <span class="text-uppercase page-subtitle">Overview</span>
+                        <h3 class="page-title">Comments Tables</h3>
                     </div>
                 </div>
                 <!-- End Page Header -->
-                <div class="row" id="category_container">
+                <!-- Default Light Table -->
+                <div class="row">
+                    <div class="col">
+                        <div class="card card-small mb-4">
+                            <div class="card-header border-bottom">
+                                <h6 class="m-0">留言列表</h6>
+                            </div>
+                            <div class="card-body p-0 pb-3 text-center">
+                                <table class="table mb-0">
+                                    <thead class="bg-light">
+                                    <tr>
+                                        <th scope="col" class="border-0">#</th>
+                                        <th scope="col" class="border-0">昵称</th>
+                                        <th scope="col" class="border-0">邮箱</th>
+                                        <th scope="col" class="border-0">内容</th>
+                                        <th scope="col" class="border-0">留言时间</th>
+                                        <th scope="col" class="border-0">地址IP</th>
+                                        <th scope="col" class="border-0"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="comment_container" id="comment_container">
 
-
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-
-
+                <!-- End Default Light Table -->
             </div>
             <footer class="main-footer d-flex p-2 px-3 bg-white border-top">
                 <ul class="nav">
@@ -245,64 +264,28 @@
             </footer>
         </main>
     </div>
-</div>
 
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel">
-    <div class="modal-dialog " role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="addModalLabel">新增分类</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group col-md-12">
-                    <label >分类名称：</label>
-                    <input type="text" class="form-control" id="" placeholder=""> </div>
-                <div class="form-group col-md-12">
-                    <label >分类副标题</label>
-                    <input type="text" class="form-control" id="" placeholder=""> </div>
-                <div class="form-group col-md-12">
-                    <label >分类背景图</label>
-                    <input type="text" class="form-control" id="" placeholder=""> </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary">添加</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="deleteModalLabel">操作确认</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4>确定要删除此条留言吗</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="deleteComment(this)">删除</button>
+                    <p hidden id="modal_comment_id"></p>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog " role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="myModalLabel">编辑分类</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group col-md-12">
-                    <label >分类名称：</label>
-                    <input type="text" class="form-control" id="category_modal" placeholder=""> </div>
-                <div class="form-group col-md-12">
-                    <label >分类副标题</label>
-                    <input type="text" class="form-control" id="subtitle_modal" placeholder=""> </div>
-                <div class="form-group col-md-12">
-                    <label >分类背景图</label>
-                    <input type="text" class="form-control" id="pictureUrl_modal" placeholder=""> </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="updateCategory(this)">更新</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
@@ -315,39 +298,28 @@
 <!-- 引入模板引擎js -->
 <script src='../js/template-web.js'></script>
 <!--制定卡片模板 -->
-<script type="text/html" id="categoryTemplate">
-
-        <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-            <div class="card card-small card-post h-100">
-                <div class="card-post__image" style="background-image: url('{{categoryUrl}}');"></div>
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <a class="text-fiord-blue categoryTemp"  href="#">{{category}}</a>
-                    </h5>
-                    <p class="card-text">{{subtitle}}</p>
-                    <div class="col text-right view-report">
-                        <a href="#">
-                              <span class="text-danger">
-                                <i class="material-icons">clear</i>
-                              </span> 删除 </a>
-                        <a href="#" data-toggle="modal" data-target="#editModal" onclick="showMadal(this)" >
-                              <span class="text-light">
-                                <i class="material-icons">more_vert</i>
-                              </span> 编辑 </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+<script type="text/html" id="commentTemplate">
+    <tr>
+        <td>{{index}}</td>
+        <td>{{nickName}}</td>
+        <td>{{email}}</td>
+        <td width="30%">{{comment}}</td>
+        <td>{{date}}</td>
+        <td>{{address}}</td>
+        <td>
+            <button type="button" class="mb-2 btn btn-sm btn-danger mr-1" data-toggle="modal" data-target="#deleteModal" onclick="getCommentId(this)">删除</button>
+            <p hidden>{{commentId}}</p>
+            <button type="button" class="mb-2 btn btn-sm btn-primary mr-1">回复</button>
+        </td>
+    </tr>
 </script>
 
 <script type="text/javascript">
-
-    listCategories();
-    function listCategories() {
+    listComments();
+    function listComments() {
         $.ajax({
             type:"get",
-            url:"/api/categories/list",
+            url:"/api/comments/list",
             dataType:"json",
             async: true,
             success:function (result) {
@@ -355,17 +327,23 @@
                 $.each(json,function (index,item) {
                     //console.log(json[index].id+""+json[index].title);
                     var data = {
-                        categoryId:"",
-                        category:"",
-                        subtitle:"",
-                        categoryUrl:""
+                        index:"",
+                        commentId:"",
+                        nickName:"",
+                        email:"",
+                        comment:"",
+                        date:"",
+                        address:""
                     };
-                    data.categoryId=json[index].id;
-                    data.category=json[index].name;
-                    data.subtitle = json[index].subtitle;
-                    data.categoryUrl = ("../"+json[index].pictureUrl);
-                    var res = template("categoryTemplate", data);
-                    document.getElementById("category_container").innerHTML += res;
+                    data.index = index+1;
+                    data.commentId=json[index].id;
+                    data.nickName=json[index].name;
+                    data.email = json[index].email;
+                    data.comment = json[index].content;
+                    data.date = json[index].create_by;
+                    data.address = json[index].ip;
+                    var res = template("commentTemplate", data);
+                    document.getElementById("comment_container").innerHTML += res;
 
                 });
             },
@@ -374,18 +352,27 @@
             }
         });
     }
-
-    function updateCategory(){
-
+    
+    function getCommentId(ob) {
+        var commentId = $(ob).next().text();
+        $("#modal_comment_id").html(commentId);
     }
     
-    function showMadal(ob) {
-        var object = $(ob);
-        var category = object.parent().prev().prev().children("a:first-child").text();
-        var subtitle = object.parent().prev().text();
+    function deleteComment(ob){
+        var commentId = $(ob).next().text();
+        $.ajax({
+            type:"delete",
+            url:"/admin/comments/"+commentId,
+            cache: false,  //禁用缓存
+            async:true,
+            success:function (result) {
+                location.reload();
+            },
+            error:function(error){
+                console.log(error);
+            }
+        });
 
-        $("#category_modal").attr("value",category);
-        $("#subtitle_modal").attr("value",subtitle);
     }
 </script>
 </body>

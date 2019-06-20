@@ -1,13 +1,11 @@
 package cn.x2yu.blog.controller;
 
-import cn.x2yu.blog.dto.ArticleDto;
-import cn.x2yu.blog.dto.ArticleSimpleDto;
-import cn.x2yu.blog.dto.CategoryDto;
-import cn.x2yu.blog.dto.CategorySimpleDto;
+import cn.x2yu.blog.dto.*;
 import cn.x2yu.blog.entity.Comment;
 import cn.x2yu.blog.service.ArticleService;
 import cn.x2yu.blog.service.CategoryService;
 import cn.x2yu.blog.service.CommentService;
+import cn.x2yu.blog.util.FormatFile;
 import cn.x2yu.blog.util.ReadMd;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,6 +31,8 @@ public class ForeController {
     CommentService commentService;
     @Autowired
     ReadMd readMd;
+    @Autowired
+    FormatFile formatFile;
     /**
      * 获取所有文章
      * */
@@ -129,8 +130,10 @@ public class ForeController {
      * */
     @ApiOperation("获取所有留言")
     @GetMapping("comments/list")
-    public List<Comment> listAllComment(){
-        return null;
+    public List<CommentDto> listAllComment() throws Exception{
+        List<CommentDto> commentList = commentService.listAllComment();
+
+        return commentList;
     }
 
     /**
