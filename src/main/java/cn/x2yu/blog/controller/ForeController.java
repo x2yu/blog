@@ -7,6 +7,8 @@ import cn.x2yu.blog.service.CategoryService;
 import cn.x2yu.blog.service.CommentService;
 import cn.x2yu.blog.util.FormatFile;
 import cn.x2yu.blog.util.ReadMd;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -105,9 +107,7 @@ public class ForeController {
     @ApiOperation("获取所有分类")
     @GetMapping("categories/list")
     public List<CategoryDto> listAllCategoryInfo(){
-
         List<CategoryDto>categoryDtos = categoryService.listAllCategory();
-
         return categoryDtos;
     }
 
@@ -129,11 +129,12 @@ public class ForeController {
      * 获取所有留言（留言板）
      * */
     @ApiOperation("获取所有留言")
-    @GetMapping("comments/list")
-    public List<CommentDto> listAllComment() throws Exception{
+    @GetMapping("comments/list/{page}")
+    public PageInfo listAllComment(@PathVariable("page") Integer pageNum) throws Exception{
+        PageHelper.startPage(pageNum,5);
         List<CommentDto> commentList = commentService.listAllComment();
-
-        return commentList;
+        PageInfo<CommentDto> pageInfo = new PageInfo<>(commentList);
+        return pageInfo;
     }
 
     /**
@@ -143,6 +144,8 @@ public class ForeController {
     @PostMapping("comments")
     public String addComment(@RequestBody Comment comment, HttpServletRequest request){
         String ip = request.getRemoteAddr();
+        String path = request.getSession().getServletContext().getRealPath("markdown");
+        System.out.println(path);
         comment.setIp(ip);
         commentService.addComment(comment);
         return "null";
@@ -166,6 +169,20 @@ public class ForeController {
     public String addArticleComment(){
         return null;
 
+    }
+
+    /**
+     * 专门获取分页信息
+     * */
+    @ApiOperation("专门获取分页信息")
+    @GetMapping("comments/page/comment")
+    public PageInfo getPageInfo()throws Exception{
+        Integer pageNum = 1;
+        Integer pageSize = 5;
+        PageHelper.startPage(pageNum,pageSize);
+        List<CommentDto> commentList = commentService.listAllComment();
+        PageInfo<CommentDto> pageInfo = new PageInfo<>(commentList);
+        return  pageInfo;
     }
 
 }

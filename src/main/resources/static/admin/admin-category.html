@@ -12,6 +12,8 @@
     <link rel="stylesheet" id="main-stylesheet" data-version="1.1.0" href="styles/shards-dashboards.1.1.0.min.css">
     <link rel="stylesheet" href="styles/extras.1.1.0.min.css">
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <link href="css/fileinput.css">
+    <link href="css/fileinput.min.css">
 </head>
 <body class="h-100">
 <div class="color-switcher animated">
@@ -247,6 +249,7 @@
     </div>
 </div>
 
+<!--新增模态框-->
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel">
     <div class="modal-dialog " role="document">
         <div class="modal-content">
@@ -265,7 +268,9 @@
                     <input type="text" class="form-control" id="" placeholder=""> </div>
                 <div class="form-group col-md-12">
                     <label >分类背景图</label>
-                    <input type="text" class="form-control" id="" placeholder=""> </div>
+                    <div>
+                        <input id="input-b5" name="input-b5[]" type="file" multiple>
+                    </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary">添加</button>
@@ -275,6 +280,8 @@
     </div>
 </div>
 
+
+    <!-- 编辑模态框-->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog " role="document">
         <div class="modal-content">
@@ -311,6 +318,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sharrre/2.0.1/jquery.sharrre.min.js"></script>
 <script src="scripts/extras.1.1.0.min.js"></script>
 <script src="scripts/shards-dashboards.1.1.0.min.js"></script>
+<script src="scripts/fileinput.js"></script>
+<script src="scripts/fileinput.min.js"></script>
+
+<script src="../js/zh.js"></script>
 
 <!-- 引入模板引擎js -->
 <script src='../js/template-web.js'></script>
@@ -342,6 +353,18 @@
 </script>
 
 <script type="text/javascript">
+
+    initFileInput();
+
+    function initFileInput() {
+
+        $("#input-b5").fileinput({
+            language: 'zh', //设置语言
+            //uploadUrl: uploadUrl, //上传的地址
+            showUpload: false,
+            dropZoneEnabled: false,
+        });
+    }
 
     listCategories();
     function listCategories() {

@@ -237,6 +237,26 @@
 
                                     </tbody>
                                 </table>
+                                <nav class="pagination" aria-label="Page navigation" style=" margin-left: 40%;margin-top: 10px!important;">
+                                    <ul class="pagination">
+                                        <li class="page-item ">
+                                            <a href="#" class="page-link first-page" aria-label="Previous" onclick="jumpPage(this)">
+                                                <span aria-hidden="true">«</span>
+                                            </a>
+                                        </li>
+                                        <li class="page-item"><a class="page-link" href="#">{{1}}</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">{{1}}</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">{{1}}</a></li>
+                                        <div class="pagination" id="nav-lis">
+
+                                        </div>
+                                        <li class="page-item">
+                                            <a href="#" class="page-link last-page" aria-label="Next">
+                                                <span aria-hidden="true">»</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
                             </div>
                         </div>
                     </div>
@@ -314,18 +334,25 @@
     </tr>
 </script>
 
+<script type="text/html" id="nav-li-template">
+    <li class="page-item"><a class="page-link" href="#">{{pageNum}}</a></li>
+</script>>
 <script type="text/javascript">
-    listComments();
-    function listComments() {
+
+    //默认初始化第一页
+    listComments(1);
+    function listComments(page) {
         $.ajax({
             type:"get",
-            url:"/api/comments/list",
+            url:"/api/comments/list/"+page,
             dataType:"json",
             async: true,
             success:function (result) {
                 var json = result; //数组
-                $.each(json,function (index,item) {
-                    //console.log(json[index].id+""+json[index].title);
+
+                var pageList = json.list;
+
+                $.each(pageList,function (index,item) {
                     var data = {
                         index:"",
                         commentId:"",
@@ -336,16 +363,25 @@
                         address:""
                     };
                     data.index = index+1;
-                    data.commentId=json[index].id;
-                    data.nickName=json[index].name;
-                    data.email = json[index].email;
-                    data.comment = json[index].content;
-                    data.date = json[index].create_by;
-                    data.address = json[index].ip;
+                    data.commentId=pageList[index].id;
+                    data.nickName=pageList[index].name;
+                    data.email = pageList[index].email;
+                    data.comment = pageList[index].content;
+                    data.date = pageList[index].create_by;
+                    data.address = pageList[index].ip;
                     var res = template("commentTemplate", data);
                     document.getElementById("comment_container").innerHTML += res;
-
                 });
+
+                var pageCount = (json.navigatePages/json.pageSize)+1;
+                var i;
+                for(i=1;i<pageCount;i++){
+                    var data = {
+                        pageNum:i
+                    }
+                    var res = template("nav-li-template", data);
+                    document.getElementById("nav-lis").innerHTML += res;
+                }
             },
             error:function (error) {
                 console.log(error);
@@ -372,6 +408,10 @@
                 console.log(error);
             }
         });
+
+    }
+
+    function jumpPage(ob) {
 
     }
 </script>

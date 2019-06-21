@@ -3,6 +3,7 @@ package cn.x2yu.blog.util;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -45,19 +46,21 @@ public class FormatFile {
      * */
     public void articleRename(String oldName,String newName)throws Exception{
 
+        String uploadDir= ResourceUtils.getURL("classpath:").getPath()+"/markdown";
+        System.out.println(uploadDir);
 
-        Resource resource = new ClassPathResource("markdown/"+oldName);
-        File oldFile = resource.getFile();
-
-        String url = oldFile.getAbsolutePath();
-        String newurl = url.replace(oldName," ");
-
-        System.out.println(oldFile.getAbsolutePath());
-        System.out.println(oldFile.getCanonicalPath());
-        System.out.println(oldFile.getPath());
-
-
-        oldFile.renameTo(new File(newurl+newName+".txt"));
+//        Resource resource = new ClassPathResource("markdown/"+oldName);
+//        File oldFile = resource.getFile();
+//
+//        String url = oldFile.getAbsolutePath();
+//        String newurl = url.replace(oldName," ");
+//
+//        System.out.println(oldFile.getAbsolutePath());
+//        System.out.println(oldFile.getCanonicalPath());
+//        System.out.println(oldFile.getPath());
+//
+//
+//        oldFile.renameTo(new File(newurl+newName+".txt"));
 
     }
 
