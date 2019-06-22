@@ -237,26 +237,9 @@
 
                                     </tbody>
                                 </table>
-                                <nav class="pagination" aria-label="Page navigation" style=" margin-left: 40%;margin-top: 10px!important;">
-                                    <ul class="pagination">
-                                        <li class="page-item ">
-                                            <a href="#" class="page-link first-page" aria-label="Previous" onclick="jumpPage(this)">
-                                                <span aria-hidden="true">«</span>
-                                            </a>
-                                        </li>
-                                        <li class="page-item"><a class="page-link" href="#">{{1}}</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">{{1}}</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">{{1}}</a></li>
-                                        <div class="pagination" id="nav-lis">
+                                <div class="page-distribution" id="page-distribution">
 
-                                        </div>
-                                        <li class="page-item">
-                                            <a href="#" class="page-link last-page" aria-label="Next">
-                                                <span aria-hidden="true">»</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -334,13 +317,46 @@
     </tr>
 </script>
 
-<script type="text/html" id="nav-li-template">
-    <li class="page-item"><a class="page-link" href="#">{{pageNum}}</a></li>
-</script>>
+<script type="text/html" id="page-distribution-template">
+    <nav class="pagination-lg" aria-label="Page navigation" style=" margin-left: 35%;margin-top: 40px!important;">
+        <ul class="pagination">
+            <li class="page-item ">
+                <a href="#" class="page-link first-page" aria-label="Previous" onclick="jumpPage(this)">
+                    <p hidden class="p-hidden">{{firstPage}}</p>
+                    <span aria-hidden="true">«</span>
+                </a>
+            </li>
+            <li class="page-item ">
+                <a href="#" class="page-link pre-page" onclick="jumpPage(this)">
+                    <p hidden class="p-hidden">{{prePage}}</p>
+                    <span aria-hidden="true">&lt;</span>
+                </a>
+            </li>
+            <li class="page-item "><a href="#" class="page-link">{{pageNum}}</a>
+            </li>
+            <li class="page-item ">
+                <a href="#" class="page-link next-page"  onclick="jumpPage(this)">
+                    <p hidden class="p-hidden">{{nextPage}}</p>
+                    <span aria-hidden="true">&gt;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a href="#" class="page-link last-page" aria-label="Next" onclick="jumpPage(this)">
+                    <p hidden class="p-hidden">{{lastPage}}</p>
+                    <span aria-hidden="true">»</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</script>
 <script type="text/javascript">
 
-    //默认初始化第一页
-    listComments(1);
+    $(document).ready(function(){
+        //默认初始化第一页
+        listComments(1);
+    });
+
+
     function listComments(page) {
         $.ajax({
             type:"get",
@@ -352,6 +368,7 @@
 
                 var pageList = json.list;
 
+                //渲染填充表格数据
                 $.each(pageList,function (index,item) {
                     var data = {
                         index:"",
@@ -373,15 +390,37 @@
                     document.getElementById("comment_container").innerHTML += res;
                 });
 
-                var pageCount = (json.navigatePages/json.pageSize)+1;
-                var i;
-                for(i=1;i<pageCount;i++){
-                    var data = {
-                        pageNum:i
-                    }
-                    var res = template("nav-li-template", data);
-                    document.getElementById("nav-lis").innerHTML += res;
+                //渲染填充分页数据
+                //总页数,也是最后一页 向下取整加1
+                var pages=json.pages;
+                var pageNum = json.pageNum;//当前页
+                var prePage;
+                var nextPage;
+
+
+                //前一页判断
+                if(pageNum-1>=1){
+                     prePage = json.prePage;
+                }else{
+                    prePage =1;
                 }
+                //后一页判断
+                if(pageNum+1<=pages){
+                    nextPage = json.pageNum+1;
+                }else{
+                    nextPage = pages;
+                }
+
+                var pageData ={
+                    firstPage:1,
+                    prePage:prePage,
+                    pageNum:pageNum,
+                    nextPage:nextPage,
+                    lastPage:pages
+                }
+                var res = template("page-distribution-template", pageData);
+                document.getElementById("page-distribution").innerHTML += res;
+
             },
             error:function (error) {
                 console.log(error);
@@ -412,7 +451,11 @@
     }
 
     function jumpPage(ob) {
-
+        var pageNum =$(ob).children('p:first-child').text();
+        console.log("下一页是："+pageNum);
+        $('.comment_container').empty();
+        $('.page-distribution').empty();
+        listComments(pageNum);
     }
 </script>
 </body>

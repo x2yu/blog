@@ -130,10 +130,12 @@ public class ForeController {
      * */
     @ApiOperation("获取所有留言")
     @GetMapping("comments/list/{page}")
-    public PageInfo listAllComment(@PathVariable("page") Integer pageNum) throws Exception{
+    public PageInfo listAllComment(@PathVariable("page") Integer pageNum){
+
         PageHelper.startPage(pageNum,5);
-        List<CommentDto> commentList = commentService.listAllComment();
-        PageInfo<CommentDto> pageInfo = new PageInfo<>(commentList);
+        List<Comment> commentList = commentService.listAllComment();
+
+        PageInfo<Comment> pageInfo = new PageInfo<>(commentList);
         return pageInfo;
     }
 
@@ -169,20 +171,6 @@ public class ForeController {
     public String addArticleComment(){
         return null;
 
-    }
-
-    /**
-     * 专门获取分页信息
-     * */
-    @ApiOperation("专门获取分页信息")
-    @GetMapping("comments/page/comment")
-    public PageInfo getPageInfo()throws Exception{
-        Integer pageNum = 1;
-        Integer pageSize = 5;
-        PageHelper.startPage(pageNum,pageSize);
-        List<CommentDto> commentList = commentService.listAllComment();
-        PageInfo<CommentDto> pageInfo = new PageInfo<>(commentList);
-        return  pageInfo;
     }
 
 }

@@ -1,5 +1,7 @@
 package cn.x2yu.blog.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class Comment {
@@ -7,6 +9,7 @@ public class Comment {
 
     private String content;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date create_by;
 
     private String email;
@@ -14,8 +17,6 @@ public class Comment {
     private String name;
 
     private String ip;
-
-    private Boolean is_effective;
 
     public Long getId() {
         return id;
@@ -65,11 +66,4 @@ public class Comment {
         this.ip = ip == null ? null : ip.trim();
     }
 
-    public Boolean getIs_effective() {
-        return is_effective;
-    }
-
-    public void setIs_effective(Boolean is_effective) {
-        this.is_effective = is_effective;
-    }
 }

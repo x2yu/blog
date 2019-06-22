@@ -8,7 +8,6 @@
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="ip" jdbcType="VARCHAR" property="ip" />
-    <result column="is_effective" jdbcType="BIT" property="is_effective" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -40,7 +39,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, content, create_by, email, name, ip, is_effective
+    id, content, create_by, email, name, ip
   </sql>
   <select id="selectByExample" parameterType="cn.x2yu.blog.entity.CommentExample" resultMap="BaseResultMap">
     select
@@ -69,9 +68,9 @@
   </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.x2yu.blog.entity.Comment" useGeneratedKeys="true">
     insert into tbl_comment (content, create_by, email, 
-      name, ip, is_effective)
+      name, ip)
     values (#{content,jdbcType=VARCHAR}, #{create_by,jdbcType=TIMESTAMP}, #{email,jdbcType=VARCHAR}, 
-      #{name,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{is_effective,jdbcType=BIT})
+      #{name,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR},jdbcType=BIT})
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="cn.x2yu.blog.entity.Comment" useGeneratedKeys="true">
     insert into tbl_comment
@@ -91,9 +90,6 @@
       <if test="ip != null">
         ip,
       </if>
-      <if test="is_effective != null">
-        is_effective,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="content != null">
@@ -110,9 +106,6 @@
       </if>
       <if test="ip != null">
         #{ip,jdbcType=VARCHAR},
-      </if>
-      <if test="is_effective != null">
-        #{is_effective,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -134,9 +127,6 @@
       <if test="ip != null">
         ip = #{ip,jdbcType=VARCHAR},
       </if>
-      <if test="is_effective != null">
-        is_effective = #{is_effective,jdbcType=BIT},
-      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -146,8 +136,7 @@
       create_by = #{create_by,jdbcType=TIMESTAMP},
       email = #{email,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
-      ip = #{ip,jdbcType=VARCHAR},
-      is_effective = #{is_effective,jdbcType=BIT}
+      ip = #{ip,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
