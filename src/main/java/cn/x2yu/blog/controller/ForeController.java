@@ -130,7 +130,8 @@ public class ForeController {
      * */
     @ApiOperation("获取所有留言")
     @GetMapping("comments/list/{page}")
-    public PageInfo listAllComment(@PathVariable("page") Integer pageNum){
+    public PageInfo listAllComment(@PathVariable("page") Integer pageNum)throws Exception{
+
 
         PageHelper.startPage(pageNum,5);
         List<Comment> commentList = commentService.listAllComment();

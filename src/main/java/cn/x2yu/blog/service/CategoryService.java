@@ -7,9 +7,13 @@ import cn.x2yu.blog.entity.CategoryInfo;
 import java.util.List;
 
 public interface CategoryService {
-    void addCategory();
-    void deleteCategory();
-    void updateCategory();
+    void addCategoryInfo(CategoryInfo categoryInfo);
+
+    void deleteCategory(Long categoryId);
+
+    void updateCategory(CategoryInfo categoryInfo);
+
+    CategoryInfo getCategoryInfoByName(String categoryName);
 
     CategoryDto getCategory();
 

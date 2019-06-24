@@ -7,6 +7,8 @@ import java.util.List;
 public interface CategoryPictureMapper {
     int deleteByPrimaryKey(Long id);
 
+    int deleteByCategoryId(Long id);
+
     int insert(CategoryPicture record);
 
     int insertSelective(CategoryPicture record);
@@ -16,6 +18,8 @@ public interface CategoryPictureMapper {
     CategoryPicture selectByPrimaryKey(Long id);
 
     int updateByPrimaryKeySelective(CategoryPicture record);
+
+    int updateByCategoryIdSelective (CategoryPicture record);
 
     int updateByPrimaryKey(CategoryPicture record);
 }

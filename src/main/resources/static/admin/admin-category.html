@@ -12,8 +12,8 @@
     <link rel="stylesheet" id="main-stylesheet" data-version="1.1.0" href="styles/shards-dashboards.1.1.0.min.css">
     <link rel="stylesheet" href="styles/extras.1.1.0.min.css">
     <script async defer src="https://buttons.github.io/buttons.js"></script>
-    <link href="css/fileinput.css">
-    <link href="css/fileinput.min.css">
+
+
 </head>
 <body class="h-100">
 <div class="color-switcher animated">
@@ -262,24 +262,26 @@
             <div class="modal-body">
                 <div class="form-group col-md-12">
                     <label >分类名称：</label>
-                    <input type="text" class="form-control" id="" placeholder=""> </div>
+                    <input type="text" class="form-control" id="category_add_name"  placeholder=""> </div>
                 <div class="form-group col-md-12">
                     <label >分类副标题</label>
-                    <input type="text" class="form-control" id="" placeholder=""> </div>
+                    <input type="text" class="form-control" id="category_add_subtitle" placeholder=""> </div>
                 <div class="form-group col-md-12">
                     <label >分类背景图</label>
-                    <div>
-                        <input id="input-b5" name="input-b5[]" type="file" multiple>
+                    <input type="file" name="file" class="form-control" id="category_add_img" style="padding: 0px;"
+                               placeholder="&nbsp;上传文件">
+                    <img id="img_add_preview" data-src="" src="" data-holder-rendered="true"
+                                 style="width: 100px; display: block;">
                     </div>
-            </div>
+                </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">添加</button>
+                <button type="button" class="btn btn-primary" onclick="postImg()">添加</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
             </div>
         </div>
     </div>
 </div>
-
+</div>
 
     <!-- 编辑模态框-->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -294,21 +296,51 @@
             <div class="modal-body">
                 <div class="form-group col-md-12">
                     <label >分类名称：</label>
-                    <input type="text" class="form-control" id="category_modal" placeholder=""> </div>
+                    <input type="text" class="form-control" id="category_edit_name" placeholder=""> </div>
                 <div class="form-group col-md-12">
                     <label >分类副标题</label>
-                    <input type="text" class="form-control" id="subtitle_modal" placeholder=""> </div>
+                    <input type="text" class="form-control" id="category_edit_subtitle" placeholder=""> </div>
                 <div class="form-group col-md-12">
                     <label >分类背景图</label>
-                    <input type="text" class="form-control" id="pictureUrl_modal" placeholder=""> </div>
+                    <input type="file" name="file" class="form-control" id="category_edit_img" style="padding: 0px;"
+                           placeholder="&nbsp;上传文件">
+                    <img id="img_edit_preview" data-src="" src="" data-holder-rendered="true"
+                         style="width: 100px; display: block;">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="updateCategory(this)">更新</button>
+                <button type="button" class="btn btn-primary" onclick="updateCategory()">更新</button>
+                <p hidden id="category_edit_id"></p>
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
             </div>
         </div>
     </div>
 </div>
+</div>
+
+<!--确定删除模态框-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="deleteModalLabel">操作确认</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4>确定要删除此分类吗</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="deleteCategory()">删除</button>
+                <p hidden id="category_delete_id"></p>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
@@ -318,10 +350,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sharrre/2.0.1/jquery.sharrre.min.js"></script>
 <script src="scripts/extras.1.1.0.min.js"></script>
 <script src="scripts/shards-dashboards.1.1.0.min.js"></script>
-<script src="scripts/fileinput.js"></script>
-<script src="scripts/fileinput.min.js"></script>
 
-<script src="../js/zh.js"></script>
 
 <!-- 引入模板引擎js -->
 <script src='../js/template-web.js'></script>
@@ -337,14 +366,15 @@
                     </h5>
                     <p class="card-text">{{subtitle}}</p>
                     <div class="col text-right view-report">
-                        <a href="#">
+                        <a href="#" data-toggle="modal" data-target="#deleteModal" onclick="showDeleteModal(this)">
                               <span class="text-danger">
                                 <i class="material-icons">clear</i>
                               </span> 删除 </a>
-                        <a href="#" data-toggle="modal" data-target="#editModal" onclick="showMadal(this)" >
+                              <a href="#" data-toggle="modal" data-target="#editModal" onclick="showMadal(this)" >
                               <span class="text-light">
                                 <i class="material-icons">more_vert</i>
                               </span> 编辑 </a>
+                              <p hidden>{{categoryId}}</p>
                     </div>
                 </div>
             </div>
@@ -354,19 +384,13 @@
 
 <script type="text/javascript">
 
-    initFileInput();
+    $(document).ready(function(){
 
-    function initFileInput() {
+        listCategories();
+        showAddPreImg();
+        showEditPreImg();
+    });
 
-        $("#input-b5").fileinput({
-            language: 'zh', //设置语言
-            //uploadUrl: uploadUrl, //上传的地址
-            showUpload: false,
-            dropZoneEnabled: false,
-        });
-    }
-
-    listCategories();
     function listCategories() {
         $.ajax({
             type:"get",
@@ -398,18 +422,146 @@
         });
     }
 
-    function updateCategory(){
 
-    }
     
     function showMadal(ob) {
         var object = $(ob);
         var category = object.parent().prev().prev().children("a:first-child").text();
         var subtitle = object.parent().prev().text();
+        var categoryId = object.next().text();
 
-        $("#category_modal").attr("value",category);
-        $("#subtitle_modal").attr("value",subtitle);
+        console.log("aaaaA:"+categoryId);
+
+        $("#category_edit_name").attr("value",category);
+        $("#category_edit_subtitle").attr("value",subtitle);
+        $("#category_edit_id").html(categoryId);
     }
+
+
+    function showAddPreImg(){
+        //上传图片选择文件改变后刷新预览图
+        $("#category_add_img").change(function (e) {
+            //获取目标文件
+            var file = e.target.files || e.dataTransfer.files;
+            //如果目标文件存在
+            if (file) {
+                //定义一个文件阅读器
+                var reader = new FileReader();
+                //文件装载后将其显示在图片预览里
+                reader.onload = function () {
+                    $("#img_add_preview").attr("src", this.result);
+                }
+                //装载文件
+                reader.readAsDataURL(file[0]);
+            }
+        });
+    }
+    function showEditPreImg(){
+        //上传图片选择文件改变后刷新预览图
+        $("#category_edit_img").change(function (e) {
+            //获取目标文件
+            var file = e.target.files || e.dataTransfer.files;
+            //如果目标文件存在
+            if (file) {
+                //定义一个文件阅读器
+                var reader = new FileReader();
+                //文件装载后将其显示在图片预览里
+                reader.onload = function () {
+                    $("#img_edit_preview").attr("src", this.result);
+                }
+                //装载文件
+                reader.readAsDataURL(file[0]);
+            }
+        });
+    }
+
+    //添加分类
+    function postImg() {
+        var fromData = new FormData();
+        fromData.append('category_name', $('#category_add_name').val());
+        fromData.append('category_subtitle', $('#category_add_subtitle').val());
+        fromData.append("category_img",$("#category_add_img")[0].files[0]);
+        $.ajax({
+           url:"/admin/categories",
+           type:"post",
+           data: fromData,
+           processData: false, // 默认 | 不处理数据
+           contentType: false ,// 默认 | 不设置内容类型
+            success:function(res){
+                $("#addModal").modal('hide');
+
+                $('#addModal').on('hidden.bs.modal', function () {
+                    // 关闭后清空分类数据重新请求
+                    $("#category_container").empty();
+                    listCategories();
+                })
+            },
+            error:function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    //编辑分类
+    function updateCategory(){
+
+        var categoryId = $("#category_edit_id").text();
+        var fromData = new FormData();
+        fromData.append('category_name', $('#category_edit_name').val());
+        fromData.append('category_subtitle', $('#category_edit_subtitle').val());
+        fromData.append("category_img",$("#category_edit_img")[0].files[0]);
+        $.ajax({
+            url:"/admin/categories/"+categoryId,
+            type:"put",
+            data: fromData,
+            processData: false, // 默认 | 不处理数据
+            contentType: false ,// 默认 | 不设置内容类型
+            success:function(res){
+                $("#editModal").modal('hide');
+
+                $('#editModal').on('hidden.bs.modal', function () {
+                    // 关闭后清空分类数据重新请求
+                    $("#category_container").empty();
+                    listCategories();
+                })
+            },
+            error:function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    //删除分类
+    function showDeleteModal(ob){
+        var categoryId = $(ob).next().next().text();
+        $("#category_delete_id").html(categoryId);
+    }
+
+    function deleteCategory(){
+
+        var categoryId = $("#category_delete_id").text();
+        $.ajax({
+            type:"delete",
+            url:"/admin/categories/"+categoryId,
+            cache: false,  //禁用缓存
+            async:true,
+            success:function(res){
+                $("#deleteModal").modal('hide');
+
+                $('#deleteModal').on('hidden.bs.modal', function () {
+                    // 关闭后清空分类数据重新请求
+                    $("#category_container").empty();
+                    listCategories();
+                })
+            },
+            error:function (error) {
+                console.log(error);
+            }
+        });
+    }
+
 </script>
+
 </body>
+
 </html>

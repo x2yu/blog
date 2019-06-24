@@ -49,6 +49,8 @@ public class FormatFile {
         String uploadDir= ResourceUtils.getURL("classpath:").getPath()+"/markdown";
         System.out.println(uploadDir);
 
+
+
 //        Resource resource = new ClassPathResource("markdown/"+oldName);
 //        File oldFile = resource.getFile();
 //

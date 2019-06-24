@@ -65,6 +65,10 @@
     delete from tbl_category_picture
     where id = #{id,jdbcType=BIGINT}
   </delete>
+  <delete id="deleteByCategoryId" parameterType="java.lang.Long">
+    delete from tbl_category_picture
+    where category_id = #{id,jdbcType=BIGINT}
+  </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.x2yu.blog.entity.CategoryPicture" useGeneratedKeys="true">
     insert into tbl_category_picture (category_id, picture_url, create_by, 
       modified_by)
@@ -119,6 +123,24 @@
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByCategoryIdSelective" parameterType="cn.x2yu.blog.entity.CategoryPicture">
+    update tbl_category_picture
+    <set>
+      <if test="id != null">
+        id = #{id,jdbcType=BIGINT},
+      </if>
+      <if test="picture_url != null">
+        picture_url = #{picture_url,jdbcType=VARCHAR},
+      </if>
+      <if test="create_by != null">
+        create_by = #{create_by,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modified_by != null">
+        modified_by = #{modified_by,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where category_id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.x2yu.blog.entity.CategoryPicture">
     update tbl_category_picture

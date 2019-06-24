@@ -1,10 +1,13 @@
 package cn.x2yu.blog.controller;
 
 import cn.x2yu.blog.entity.CategoryInfo;
+import cn.x2yu.blog.service.CategoryService;
 import cn.x2yu.blog.service.CommentService;
+import cn.x2yu.blog.util.UploadAndDeleteFile;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 后端控制器
@@ -14,6 +17,11 @@ import org.springframework.web.bind.annotation.*;
 public class BackController {
     @Autowired
     CommentService commentService;
+    @Autowired
+    UploadAndDeleteFile uploadAndDeleteFile;
+    @Autowired
+    CategoryService categoryService;
+
     /**
      * 增加一篇文章
      */
@@ -67,7 +75,26 @@ public class BackController {
      * */
     @ApiOperation("增加一个分类")
     @PostMapping("categories")
-    public String addCategory(){
+    public String addCategory(@RequestParam("category_img") MultipartFile img,@RequestParam("category_name") String name,
+                              @RequestParam("category_subtitle") String subtitle){
+
+        if(img.isEmpty()){
+            return "上传失败";
+        }
+
+        CategoryInfo categoryInfo = new CategoryInfo();
+        categoryInfo.setName(name);
+        categoryInfo.setSubtitle(subtitle);
+
+        //存入CategoryInfo
+        categoryService.addCategoryInfo(categoryInfo);
+
+        //用数据库中对应分类的id命名
+        Long categoryId = categoryService.getCategoryInfoByName(name).getId();
+
+        //上传图片
+        uploadAndDeleteFile.categoryUpload(categoryId,img);
+
         return null;
     }
 
@@ -77,8 +104,9 @@ public class BackController {
      * */
     @ApiOperation("根据id删除分类")
     @DeleteMapping("categories/{id}")
-    public String deleteCategory(){
-
+    public String deleteCategory(@PathVariable("id")Long categoryId){
+        categoryService.deleteCategory(categoryId);
+        uploadAndDeleteFile.categoryDelete(categoryId);
         return null;
     }
 
@@ -87,7 +115,17 @@ public class BackController {
      * */
     @ApiOperation("更新编辑分类")
     @PutMapping("categories/{id}")
-    public String updateCategory(){
+    public String updateCategory(@PathVariable ("id") Long categoryId,@RequestParam("category_img") MultipartFile img,
+                                 @RequestParam("category_name") String name, @RequestParam("category_subtitle") String subtitle){
+        CategoryInfo categoryInfo = new CategoryInfo();
+        categoryInfo.setName(name);
+        categoryInfo.setSubtitle(subtitle);
+        categoryInfo.setId(categoryId);
+        //数据库更新
+        categoryService.updateCategory(categoryInfo);
+        //图片资源更新
+        uploadAndDeleteFile.categoryUpdate(categoryId,img);
+
         return null;
     }
 
