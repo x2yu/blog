@@ -4,6 +4,7 @@ import cn.x2yu.blog.dao.ArticleCategoryMapper;
 import cn.x2yu.blog.dao.ArticleInfoMapper;
 import cn.x2yu.blog.dao.ArticlePictureMapper;
 import cn.x2yu.blog.dao.CategoryInfoMapper;
+import cn.x2yu.blog.dto.ArchiveArticleDto;
 import cn.x2yu.blog.dto.ArticleDto;
 import cn.x2yu.blog.dto.ArticleSimpleDto;
 import cn.x2yu.blog.entity.*;
@@ -203,5 +204,44 @@ public class ArticleServiceImpl implements ArticleService {
             }
         }
         return articleSimpleDtos;
+    }
+
+    /**
+     * 查询归档页文章数据
+     * */
+    @Override
+    public List<ArchiveArticleDto> listArchiveArticle() {
+
+        List<ArchiveArticleDto> archiveArticleDtos = new ArrayList<>();
+
+        ArticleInfoExample articleInfoExample = new ArticleInfoExample();
+        articleInfoExample.setOrderByClause("create_by desc");
+
+        List<ArticleInfo>articleInfos = articleInfoMapper.selectByExample(articleInfoExample);
+
+        if(articleInfos.size()==0){
+            return null;
+        }else {
+            for(ArticleInfo a:articleInfos){
+                Long articleId = a.getId();
+                String title = a.getTitle();
+                title = formatFile.formatArticleTitle(title);
+                Date create_by = a.getCreate_by();
+
+                //先获取分类id 再查询分类
+                Long categoryId = articleCategoryMapper.selectByArticleId(articleId).getCategory_id();
+                String category = categoryInfoMapper.selectByPrimaryKey(categoryId).getName();
+
+                ArchiveArticleDto archiveArticleDto = new ArchiveArticleDto();
+                archiveArticleDto.setId(articleId);
+                archiveArticleDto.setTitle(title);
+                archiveArticleDto.setCategory(category);
+                archiveArticleDto.setCreate_by(create_by);
+
+                archiveArticleDtos.add(archiveArticleDto);
+            }
+        }
+
+        return archiveArticleDtos;
     }
 }

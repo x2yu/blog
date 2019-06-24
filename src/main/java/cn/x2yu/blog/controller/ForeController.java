@@ -88,6 +88,18 @@ public class ForeController {
         return articleSimpleDtos;
     }
 
+    /**
+     * 归档获取文章
+     * */
+    @ApiOperation("获取最新发布的三篇文章")
+    @GetMapping("articles/archive")
+    public List<ArchiveArticleDto> listArchiveArticle(){
+
+        List<ArchiveArticleDto> archiveArticleDtos = articleService.listArchiveArticle();
+
+        return archiveArticleDtos;
+    }
+
 
     /**
      * 模糊查询获取文章
