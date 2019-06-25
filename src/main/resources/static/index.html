@@ -21,7 +21,6 @@
   <link href="css/style.css" rel="stylesheet">
 
   <!--Favicon-->
-  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
   <link rel="icon" href="images/favicon.ico" type="image/x-icon">
 
 </head>
@@ -62,32 +61,16 @@
 
 
     </div>
-    <div class="row">
-      <div class="col-12">
-        <nav>
-          <ul class="pagination justify-content-center align-items-center">
-            <li class="page-item">
-              <span class="page-link">&laquo; Previous</span>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">01</a></li>
-            <li class="page-item active">
-              <span class="page-link">02</span>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">03</a></li>
-            <li class="page-item"><a class="page-link" href="#">04</a></li>
-            <li class="page-item"><a class="page-link" href="#">05</a></li>
-            <li class="page-item"><a class="page-link" href="#">06</a></li>
-            <li class="page-item">
-              <a class="page-link" href="#">Next &raquo;</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </div>
   </div>
 </section>
 <!-- /blog post -->
 
+<!-- page-->
+  <div class="container">
+    <div class="col-12" id="page-container">
+
+    </div>
+  </div>
 <!-- instagram -->
 <section>
   <div class="container-fluid px-0">
@@ -127,7 +110,7 @@
   <div class="col-lg-4 col-sm-6 mb-5">
     <article class="text-center">
       <img class="img-fluid mb-4" id="article-img" src="{{articleUrl}}" alt="post-thumb">
-      <p class="text-uppercase mb-2">{{tag}}</p>
+      <p class="text-uppercase mb-2">{{category}}</p>
       <h4 class="title-border">
         <a class="text-dark" href="blog-single.html" onclick="articleRead(this)">{{title}}</a>
         <p hidden>{{articleId}}</p>
@@ -155,7 +138,41 @@
   </div>
 </script>
 
+<script type="text/html" id="page-distribution-template">
+  <nav>
+    <ul class="pagination justify-content-center align-items-center">
+      <li class="page-item">
+        <span class="page-link" onclick="jumpPage(this)">&laquo; First</span>
+        <p hidden>{{firstPage}}</p>
+      </li>
+      <li class="page-item">
+        <span class="page-link" style="font-size: 16px!important;" onclick="jumpPage(this)">&laquo; Previous</span>
+        <p hidden>{{prePage}}</p>
+      </li>
+      <li class="page-item">
+        <span class="page-link"></span>
+      </li>
+      <li class="page-item"><a class="page-link active" onclick="jumpPage(this)">{{pageNum}}</a></li>
+      <li class="page-item"><a class="page-link" href="#"></a></li>
+      <li class="page-item">
+        <a class="page-link" style="font-size: 16px!important;" onclick="jumpPage(this)">Next &raquo;</a>
+        <p hidden>{{nextPage}}</p>
+      </li>
+      <li class="page-item">
+        <a class="page-link" onclick="jumpPage(this)">Last &raquo;</a>
+        <p hidden>{{lastPage}}</p>
+      </li>
+    </ul>
+  </nav>
+</script>
+
 <script type="text/javascript">
+
+  $(document).ready(function(){
+    //默认初始化第一页
+
+
+  });
 
   // 存cookie
   function setCookie(cookieName,cvalue,exdays)
@@ -166,34 +183,53 @@
     document.cookie = cookieName + "=" + cvalue + "; " + expires;
   }
 
-
-  listArticles();
-  function listArticles() {
+  listArticles(1);
+  function listArticles(page) {
     $.ajax({
       type:"get",
-      url:"/api/articles/list",
+      url:"/api/articles/list/"+page,
       dataType:"json",
-      async: false,
+      async: true,
       success:function (result) {
         var json = result; //数组
-        $.each(json,function (index,item) {
-          //console.log(json[index].id+""+json[index].title);
+
+        var pageList = json.list;
+
+        //渲染填充表格数据
+        $.each(pageList,function (index,item) {
           var data = {
             articleId:"",
-            tag:"",
             title:"",
             content:"",
+            category:"",
             articleUrl:""
           };
-          data.articleId=json[index].id;
-          data.tag=json[index].category;
-          data.title = json[index].title;
-          data.content = json[index].summary;
-          data.articleUrl = json[index].pictureUrl;
+          data.articleId=pageList[index].id;
+          data.title=pageList[index].title;
+          data.content = pageList[index].summary;
+          data.category = pageList[index].category;
+          data.articleUrl = pageList[index].pictureUrl;
           var res = template("articleTemplate", data);
           document.getElementById("article_content").innerHTML += res;
-
         });
+
+        //渲染填充分页数据
+        var pageNum = json.pageNum;//当前页
+        var prePage = json.prePage;
+        var nextPage = json.nextPage;
+        var lastPage = json.lastPage;
+        var firstPage = json.firstPage;
+
+        var pageData ={
+          firstPage:firstPage,
+          prePage:prePage,
+          pageNum:pageNum,
+          nextPage:nextPage,
+          lastPage:lastPage
+        };
+        var res = template("page-distribution-template", pageData);
+        document.getElementById("page-container").innerHTML = res;
+
       },
       error:function (error) {
         console.log(error);
@@ -245,6 +281,14 @@
     var articleId = $(ob).next().next().next().text();
     // 存文章ID cookie
     setCookie("articleId",articleId,1);
+  }
+
+  function jumpPage(ob) {
+    var pageNum =$(ob).next().text();
+    console.log("下一页是："+pageNum);
+    $('#article_content').empty();
+    $('#page-container').empty();
+    listArticles(pageNum);
   }
 
 </script>

@@ -321,27 +321,27 @@
     <nav class="pagination-lg" aria-label="Page navigation" style=" margin-left: 35%;margin-top: 40px!important;">
         <ul class="pagination">
             <li class="page-item ">
-                <a href="#" class="page-link first-page" aria-label="Previous" onclick="jumpPage(this)">
+                <a class="page-link first-page" aria-label="Previous" onclick="jumpPage(this)">
                     <p hidden class="p-hidden">{{firstPage}}</p>
                     <span aria-hidden="true">«</span>
                 </a>
             </li>
             <li class="page-item ">
-                <a href="#" class="page-link pre-page" onclick="jumpPage(this)">
+                <a class="page-link pre-page" onclick="jumpPage(this)">
                     <p hidden class="p-hidden">{{prePage}}</p>
                     <span aria-hidden="true">&lt;</span>
                 </a>
             </li>
-            <li class="page-item "><a href="#" class="page-link">{{pageNum}}</a>
+            <li class="page-item "><a class="page-link">{{pageNum}}</a>
             </li>
             <li class="page-item ">
-                <a href="#" class="page-link next-page"  onclick="jumpPage(this)">
+                <a  class="page-link next-page"  onclick="jumpPage(this)">
                     <p hidden class="p-hidden">{{nextPage}}</p>
                     <span aria-hidden="true">&gt;</span>
                 </a>
             </li>
             <li class="page-item">
-                <a href="#" class="page-link last-page" aria-label="Next" onclick="jumpPage(this)">
+                <a class="page-link last-page" aria-label="Next" onclick="jumpPage(this)">
                     <p hidden class="p-hidden">{{lastPage}}</p>
                     <span aria-hidden="true">»</span>
                 </a>
@@ -417,9 +417,9 @@
                     pageNum:pageNum,
                     nextPage:nextPage,
                     lastPage:pages
-                }
+                };
                 var res = template("page-distribution-template", pageData);
-                document.getElementById("page-distribution").innerHTML += res;
+                document.getElementById("page-distribution").innerHTML = res;
 
             },
             error:function (error) {

@@ -6,6 +6,7 @@ import cn.x2yu.blog.service.ArticleService;
 import cn.x2yu.blog.service.CategoryService;
 import cn.x2yu.blog.service.CommentService;
 import cn.x2yu.blog.util.FormatFile;
+import cn.x2yu.blog.util.PageUtil;
 import cn.x2yu.blog.util.ReadMd;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -35,12 +36,36 @@ public class ForeController {
     ReadMd readMd;
     @Autowired
     FormatFile formatFile;
+    @Autowired
+    PageUtil pageUtil;
     /**
-     * 获取所有文章
+     * 分页获取所有文章
+     * */
+    @ApiOperation("分页获取所有文章")
+    @GetMapping("articles/list/{pageNum}")
+    public PageInfo listAllArticleInfo(@PathVariable("pageNum")Integer pageNum){
+
+        Integer total = articleService.listAll().size();
+
+        PageHelper.startPage(pageNum,2);
+        List<ArticleDto> articleDtos = articleService.listAll();
+
+        PageInfo<ArticleDto> pageInfo = new PageInfo<>(articleDtos);
+
+
+
+        //分页数据处理
+        pageUtil.artclePages(pageNum,total,pageInfo);
+
+        return pageInfo;
+    }
+
+    /**
+     * 分页获取所有文章
      * */
     @ApiOperation("获取所有文章")
     @GetMapping("articles/list")
-    public List<ArticleDto> listAllArticleInfo(){
+    public List<ArticleDto> listAllArticles(){
 
         List<ArticleDto> articleDtos = articleService.listAll();
 
@@ -142,7 +167,7 @@ public class ForeController {
      * */
     @ApiOperation("获取所有留言")
     @GetMapping("comments/list/{page}")
-    public PageInfo listAllComment(@PathVariable("page") Integer pageNum)throws Exception{
+    public PageInfo listAllComment(@PathVariable("page") Integer pageNum){
 
 
         PageHelper.startPage(pageNum,5);
