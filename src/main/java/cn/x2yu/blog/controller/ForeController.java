@@ -61,15 +61,15 @@ public class ForeController {
     }
 
     /**
-     * 分页获取所有文章
+     * 获取所有文章含有时间戳
      * */
-    @ApiOperation("获取所有文章")
+    @ApiOperation("获取所有含时间戳文章")
     @GetMapping("articles/list")
-    public List<ArticleDto> listAllArticles(){
+    public List<ArticleDtoWhitDate> listArticlesWithDate(){
 
-        List<ArticleDto> articleDtos = articleService.listAll();
+        List<ArticleDtoWhitDate> listArticlesWithDates = articleService.listArticlesWithDate();
 
-        return articleDtos;
+        return listArticlesWithDates;
     }
 
 
@@ -116,7 +116,7 @@ public class ForeController {
     /**
      * 归档获取文章
      * */
-    @ApiOperation("获取最新发布的三篇文章")
+    @ApiOperation("归档获取文章")
     @GetMapping("articles/archive")
     public List<ArchiveArticleDto> listArchiveArticle(){
 

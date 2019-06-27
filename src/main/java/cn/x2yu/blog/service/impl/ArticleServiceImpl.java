@@ -6,6 +6,7 @@ import cn.x2yu.blog.dao.ArticlePictureMapper;
 import cn.x2yu.blog.dao.CategoryInfoMapper;
 import cn.x2yu.blog.dto.ArchiveArticleDto;
 import cn.x2yu.blog.dto.ArticleDto;
+import cn.x2yu.blog.dto.ArticleDtoWhitDate;
 import cn.x2yu.blog.dto.ArticleSimpleDto;
 import cn.x2yu.blog.entity.*;
 import cn.x2yu.blog.service.ArticleService;
@@ -103,20 +104,64 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setSummary(summary);
 
             //先根据文章id获取文章和分类的关系表数据，在根据category_id查询分类名称
-            ArticleCategory articleCategory = articleCategoryMapper.selectByArticleId(listArticleInfo.get(i).getId());
+            ArticleCategory articleCategory = articleCategoryMapper.selectByArticleId(articleId);
             Long aticleCategoryId = articleCategory.getCategory_id();
 
             String category = categoryInfoMapper.selectByPrimaryKey(aticleCategoryId).getName();
             articleDto.setCategory(category);
 
             //获取图片url
-            String pictureUrl = articlePictureMapper.selectByArticleId(listArticleInfo.get(i).getId()).getPicture_url();
+            String pictureUrl = articlePictureMapper.selectByArticleId(articleId).getPicture_url();
             articleDto.setPictureUrl(pictureUrl);
 
             listArticleDto.add(articleDto);
         }
 
         return listArticleDto;
+    }
+
+    /**
+     *
+     *获取带有时间戳的文章对象
+     * */
+    @Override
+    public List<ArticleDtoWhitDate> listArticlesWithDate() {
+        List<ArticleDtoWhitDate> articleDtoWhitDates = new ArrayList<>();
+
+        //查询tbl_article_info
+        ArticleInfoExample articleInfoExample = new ArticleInfoExample();
+        articleInfoExample.setOrderByClause("id desc");
+        // 无添加查询即返回所有
+        List<ArticleInfo> listArticleInfo = articleInfoMapper.selectByExample(articleInfoExample);
+
+        for(int i =0;i<listArticleInfo.size();i++){
+            ArticleDtoWhitDate articleDtoWhitDate = new ArticleDtoWhitDate();
+            Long articleId = listArticleInfo.get(i).getId();
+            String title = listArticleInfo.get(i).getTitle();
+            title = formatFile.formatArticleTitle(title);
+            String summary = listArticleInfo.get(i).getSummary();
+            Date create_by = listArticleInfo.get(i).getCreate_by();
+
+            articleDtoWhitDate.setId(articleId);
+            articleDtoWhitDate.setTitle(title);
+            articleDtoWhitDate.setSummary(summary);
+            articleDtoWhitDate.setCreate_by(create_by);
+
+            //先根据文章id获取文章和分类的关系表数据，在根据category_id查询分类名称
+            ArticleCategory articleCategory = articleCategoryMapper.selectByArticleId(articleId);
+            Long aticleCategoryId = articleCategory.getCategory_id();
+
+            String category = categoryInfoMapper.selectByPrimaryKey(aticleCategoryId).getName();
+            articleDtoWhitDate.setCategory(category);
+
+            //获取图片url
+            String pictureUrl = articlePictureMapper.selectByArticleId(articleId).getPicture_url();
+            articleDtoWhitDate.setPictureUrl(pictureUrl);
+
+            articleDtoWhitDates.add(articleDtoWhitDate);
+        }
+
+        return articleDtoWhitDates;
     }
 
     /**

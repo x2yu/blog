@@ -3,6 +3,7 @@ package cn.x2yu.blog.service;
 
 import cn.x2yu.blog.dto.ArchiveArticleDto;
 import cn.x2yu.blog.dto.ArticleDto;
+import cn.x2yu.blog.dto.ArticleDtoWhitDate;
 import cn.x2yu.blog.dto.ArticleSimpleDto;
 import cn.x2yu.blog.entity.ArticlePicture;
 
@@ -23,6 +24,8 @@ public interface ArticleService {
     ArticlePicture getPictureByArticleId(Long id);
 
     List<ArticleDto>listAll();
+
+    List<ArticleDtoWhitDate> listArticlesWithDate();
 
     List<ArticleDto>listArticleByCategory(Long categoryId);
 

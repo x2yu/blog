@@ -256,13 +256,10 @@
           <div class="modal-body">
             <div class="form-group col-md-12">
               <label >文章标题：</label>
-              <input type="text" class="form-control" id="" placeholder=""> </div>
+              <input type="text" class="form-control" id="article_edit_title" placeholder=""> </div>
             <div class="form-group col-md-12">
               <label >文章摘要</label>
-              <input type="text" class="form-control" id="" placeholder=""> </div>
-            <div class="form-group col-md-12">
-              <label >文章题图</label>
-              <input type="text" class="form-control" id="" placeholder=""> </div>
+              <input type="text" class="form-control" id="article_edit_summary" placeholder=""> </div>
             <div class="form-group col-md-12">
               <label >文章分类</label>
               <select id="inputState" class="form-control">
@@ -273,14 +270,22 @@
                 <option>杂记</option>
               </select>
             </div>
+            <div class="form-group col-md-12">
+              <label >文章题图</label>
+              <input type="file" name="file" class="form-control" id="article_edit_img" style="padding: 0px;"
+                     placeholder="&nbsp;上传文件">
+              <img id="img_edit_preview" data-src="" src="" data-holder-rendered="true"
+                   style="width: 100px; display: block;">
+            </div>
 
             <div class="form-group col-md-12">
               <label >正文：</label>
-              <textarea class="form-control" name="feDescription" rows="5">###################</textarea>
+              <textarea class="form-control" name="feDescription" rows="25" id="article_edit_content"></textarea>
             </div>
-          </div>
+
           <div class="modal-footer">
             <button type="button" class="btn btn-primary">更新</button>
+            <p hidden id="article_edit_id"></p>
             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
           </div>
         </div>
@@ -304,24 +309,25 @@
         <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
             <div class="card card-small card-post card-post--1">
                 <div class="card-post__image" style="background-image: url('{{articleUrl}}');">
-                    <a href="#" class="card-post__category badge badge-pill badge-dark">{{tag}}</a>
+                    <a href="#" class="card-post__category badge badge-pill badge-dark">{{category}}</a>
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">
                         <a class="text-fiord-blue" href="#">{{title}}</a>
                         <p hidden>{{articleId}}</p>
                     </h5>
-                    <p class="card-text d-inline-block mb-3">{{content}}</p>
-                    <span class="text-muted">28 February 2019</span>
+                    <p class="card-text d-inline-block mb-3">{{summary}}</p>
+                    <span class="text-muted">{{create_by}}</span>
                     <div class="col text-right view-report">
                     <a href="#">
                               <span class="text-danger">
                                 <i class="material-icons">clear</i>
                               </span> 删除 </a>
-                    <a href="#" data-toggle="modal" data-target="#editModal">
+                    <a href="#" data-toggle="modal" data-target="#editModal" onclick="showEdit(this)">
                               <span class="text-light">
                                 <i class="material-icons">more_vert</i>
                               </span> 编辑 </a>
+                    <p hidden>{{articleId}}</p>
                     </div>
                 </div>
             </div>
@@ -329,7 +335,13 @@
     </script>
 
     <script type="text/javascript">
+
+      $(document).ready(function(){
         listArticles();
+        showEditPreImg();
+      });
+
+
         function listArticles() {
             $.ajax({
                 type:"get",
@@ -342,15 +354,17 @@
                         //console.log(json[index].id+""+json[index].title);
                         var data = {
                             articleId:"",
-                            tag:"",
+                            category:"",
                             title:"",
-                            content:"",
+                            summary:"",
+                            create_by:"",
                             articleUrl:""
                         };
                         data.articleId=json[index].id;
-                        data.tag=json[index].category;
+                        data.category=json[index].category;
                         data.title = json[index].title;
-                        data.content = json[index].summary;
+                        data.summary = json[index].summary;
+                        data.create_by = json[index].create_by;
                         data.articleUrl = ("../"+json[index].pictureUrl);
                         var res = template("articleTemplate", data);
                         document.getElementById("article_content").innerHTML += res;
@@ -361,6 +375,59 @@
                     console.log(error);
                 }
             });
+        }
+
+        function showEdit(ob) {
+          var ob = $(ob);
+          var articleId = ob.next().text();
+          var title = ob.parent().prev().prev().prev().children("a:first-child").text();
+          var summary = ob.parent().prev().prev().text();
+          var category = ob.parent().parent().prev().children("a:first-child").text();
+
+          $("#article_edit_title").attr("value",title);
+          $("#article_edit_summary").attr("value",summary);
+          $("#article_edit_id").text(articleId);
+          $("#inputState").val(category);
+
+          getArticle(articleId);
+        }
+
+        //获取对应文章内容 填充到模态框
+        function getArticle(articleId) {
+          $.ajax({
+            type:"get",
+            url:"/api/articles/"+articleId,
+            data:{},
+            async: true,
+            success:function (data) {
+
+              $("#article_edit_content").val(data.toString());
+
+            },
+            error:function (error) {
+              console.log(error);
+            }
+          });
+        }
+
+        //预加载显示编辑图片
+        function showEditPreImg(){
+          //上传图片选择文件改变后刷新预览图
+          $("#article_edit_img").change(function (e) {
+            //获取目标文件
+            var file = e.target.files || e.dataTransfer.files;
+            //如果目标文件存在
+            if (file) {
+              //定义一个文件阅读器
+              var reader = new FileReader();
+              //文件装载后将其显示在图片预览里
+              reader.onload = function () {
+                $("#img_edit_preview").attr("src", this.result);
+              }
+              //装载文件
+              reader.readAsDataURL(file[0]);
+            }
+          });
         }
     </script>
   </body>
