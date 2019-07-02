@@ -19,5 +19,7 @@ public interface ArticlePictureMapper {
 
     int updateByPrimaryKeySelective(ArticlePicture record);
 
+    int updateByArticleIdSelective(ArticlePicture record);
+
     int updateByPrimaryKey(ArticlePicture record);
 }

@@ -263,11 +263,7 @@
             <div class="form-group col-md-12">
               <label >文章分类</label>
               <select id="inputState" class="form-control">
-                <option selected="">学习</option>
-                <option>读书</option>
-                <option>电影</option>
-                <option>旅游</option>
-                <option>杂记</option>
+
               </select>
             </div>
             <div class="form-group col-md-12">
@@ -284,7 +280,7 @@
             </div>
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary">更新</button>
+            <button type="button" class="btn btn-primary" onclick="updateArticle()">更新</button>
             <p hidden id="article_edit_id"></p>
             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
           </div>
@@ -334,10 +330,16 @@
         </div>
     </script>
 
+    <script type="text/html" id="category-option">
+        <option>{{category}}</option>
+    </script>
+
+
     <script type="text/javascript">
 
       $(document).ready(function(){
         listArticles();
+        listCategories();
         showEditPreImg();
       });
 
@@ -368,6 +370,34 @@
                         data.articleUrl = ("../"+json[index].pictureUrl);
                         var res = template("articleTemplate", data);
                         document.getElementById("article_content").innerHTML += res;
+
+                    });
+                },
+                error:function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        function listCategories() {
+            $.ajax({
+                type:"get",
+                url:"/api/categories/simple/list",
+                dataType:"json",
+                async: true,
+                success:function (result) {
+                    var json = result; //数组
+                    $.each(json,function (index,item) {
+                        //console.log(json[index].id+""+json[index].title);
+                        var data = {
+                            categoryId:"",
+                            category:""
+                        };
+                        data.categoryId=json[index].id;
+                        data.category=json[index].name;
+
+                        var res = template("category-option", data);
+                        document.getElementById("inputState").innerHTML += res;
 
                     });
                 },
@@ -429,6 +459,40 @@
             }
           });
         }
+
+        function updateArticle() {
+
+            var articleId = $("#article_edit_id").text();
+            var fromData = new FormData();
+
+            fromData.append("article_title",$("#article_edit_title").val().trim());
+            fromData.append("article_summary",$("#article_edit_summary").val());
+            fromData.append("article_category",$("#inputState").val());
+            fromData.append("article_img",$("#article_edit_img")[0].files[0]);
+            fromData.append("article_content",$("#article_edit_content").val());
+
+            $.ajax({
+                url:"/admin/articles/"+articleId,
+                type:"put",
+                data: fromData,
+                processData: false, // 默认 | 不处理数据
+                contentType: false ,// 默认 | 不设置内容类型
+                success:function(res){
+                    $("#editModal").modal('hide');
+
+                    $('#editModal').on('hidden.bs.modal', function () {
+                        // 关闭后清空分类数据重新请求
+                        $("#article_content").empty();
+                        listArticles();
+                    })
+                },
+                error:function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+
     </script>
   </body>
 </html>

@@ -61,6 +61,7 @@ public class CategoryImpl implements CategoryService {
         return null;
     }
 
+
     @Override
     public CategoryInfo getCategoryInfoByName(String categoryName) {
         CategoryInfoExample categoryInfoExample = new CategoryInfoExample();

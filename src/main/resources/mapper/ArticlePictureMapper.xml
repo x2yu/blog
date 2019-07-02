@@ -126,6 +126,24 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <update id="updateByArticleIdSelective" parameterType="cn.x2yu.blog.entity.ArticlePicture">
+    update tbl_article_picture
+    <set>
+      <if test="id != null">
+        id = #{id,jdbcType=BIGINT},
+      </if>
+      <if test="picture_url != null">
+        picture_url = #{picture_url,jdbcType=VARCHAR},
+      </if>
+      <if test="create_by != null">
+        create_by = #{create_by,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modified_by != null">
+        modified_by = #{modified_by,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where article_id = #{id,jdbcType=BIGINT}
+  </update>
   <update id="updateByPrimaryKey" parameterType="cn.x2yu.blog.entity.ArticlePicture">
     update tbl_article_picture
     set article_id = #{article_id,jdbcType=BIGINT},

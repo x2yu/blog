@@ -53,13 +53,29 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public void updateArticle() {
+    public void updateArticleInfo(ArticleInfo articleInfo) {
+
+        articleInfoMapper.updateByPrimaryKeySelective(articleInfo);
 
     }
 
     @Override
-    public void updateArticleCategory() {
+    public void updateArticleCategory(ArticleCategory articleCategory) {
 
+        articleCategoryMapper.updateByArticleIdSelective(articleCategory);
+
+    }
+
+    @Override
+    public void updateArticlePic(Long articleId) {
+
+        //数据库中题图修改
+        ArticlePicture articlePicture = new ArticlePicture();
+        String pitctureUrl = ("images/masonary-post/"+articleId+".jpg");
+        articlePicture.setArticle_id(articleId);
+        articlePicture.setPicture_url(pitctureUrl);
+
+        articlePictureMapper.updateByArticleIdSelective(articlePicture);
     }
 
     @Override

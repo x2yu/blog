@@ -507,7 +507,7 @@
 
         var categoryId = $("#category_edit_id").text();
         var fromData = new FormData();
-        fromData.append('category_name', $('#category_edit_name').val());
+        fromData.append('category_name', $('#category_edit_name').val().trim());
         fromData.append('category_subtitle', $('#category_edit_subtitle').val());
         fromData.append("category_img",$("#category_edit_img")[0].files[0]);
         $.ajax({

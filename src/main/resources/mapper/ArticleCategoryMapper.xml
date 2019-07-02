@@ -126,6 +126,24 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <update id="updateByArticleIdSelective" parameterType="cn.x2yu.blog.entity.ArticleCategory">
+    update tbl_article_category
+    <set>
+      <if test="id != null">
+        id = #{id,jdbcType=BIGINT},
+      </if>
+      <if test="category_id != null">
+        category_id = #{category_id,jdbcType=BIGINT},
+      </if>
+      <if test="create_by != null">
+        create_by = #{create_by,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modified_by != null">
+        modified_by = #{modified_by,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where article_id = #{article_id,jdbcType=BIGINT}
+  </update>
   <update id="updateByPrimaryKey" parameterType="cn.x2yu.blog.entity.ArticleCategory">
     update tbl_article_category
     set category_id = #{category_id,jdbcType=BIGINT},

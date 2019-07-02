@@ -17,5 +17,6 @@ public interface CategoryInfoMapper {
 
     int updateByPrimaryKeySelective(CategoryInfo record);
 
+
     int updateByPrimaryKey(CategoryInfo record);
 }

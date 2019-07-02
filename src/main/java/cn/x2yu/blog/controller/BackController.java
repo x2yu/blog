@@ -1,6 +1,9 @@
 package cn.x2yu.blog.controller;
 
+import cn.x2yu.blog.entity.ArticleCategory;
+import cn.x2yu.blog.entity.ArticleInfo;
 import cn.x2yu.blog.entity.CategoryInfo;
+import cn.x2yu.blog.service.ArticleService;
 import cn.x2yu.blog.service.CategoryService;
 import cn.x2yu.blog.service.CommentService;
 import cn.x2yu.blog.util.UploadAndDeleteFile;
@@ -21,6 +24,8 @@ public class BackController {
     UploadAndDeleteFile uploadAndDeleteFile;
     @Autowired
     CategoryService categoryService;
+    @Autowired
+    ArticleService articleService;
 
     /**
      * 增加一篇文章
@@ -45,7 +50,35 @@ public class BackController {
      * */
     @ApiOperation("修改/更新一篇文章")
     @PutMapping("articles/{id}")
-    public String updateArticle(){
+    public String updateArticle(@PathVariable ("id") Long articleId,@RequestParam(value = "article_img",required = false) MultipartFile img,
+                                @RequestParam("article_title") String title, @RequestParam("article_summary") String summary,
+                                @RequestParam("article_category")String category, @RequestParam("article_content")String content){
+
+        ArticleInfo articleInfo = new ArticleInfo();
+        articleInfo.setId(articleId);
+        articleInfo.setTitle((title+".md"));
+        articleInfo.setSummary(summary);
+
+        CategoryInfo categoryInfo = new CategoryInfo();
+        categoryInfo = categoryService.getCategoryInfoByName(category);
+        Long categoryId = categoryInfo.getId();
+
+        ArticleCategory articleCategory = new ArticleCategory();
+        articleCategory.setArticle_id(articleId);
+        articleCategory.setCategory_id(categoryId);
+
+        //数据库更新
+        articleService.updateArticleInfo(articleInfo);
+        articleService.updateArticleCategory(articleCategory);
+        articleService.updateArticlePic(articleId);
+
+        //图片资源更新
+        uploadAndDeleteFile.articleUpload(articleId,img);
+
+        //文章文件更新
+
+
+
         return null;
     }
 
@@ -55,6 +88,7 @@ public class BackController {
     @ApiOperation("修改文章分类")
     @PutMapping("articles/categories/{id}")
     public String updateArticleCategory(){
+
         return null;
     }
 
@@ -75,7 +109,7 @@ public class BackController {
      * */
     @ApiOperation("增加一个分类")
     @PostMapping("categories")
-    public String addCategory(@RequestParam("category_img") MultipartFile img,@RequestParam("category_name") String name,
+    public String addCategory(@RequestParam(value = "category_img",required = false) MultipartFile img,@RequestParam("category_name") String name,
                               @RequestParam("category_subtitle") String subtitle){
 
         if(img.isEmpty()){

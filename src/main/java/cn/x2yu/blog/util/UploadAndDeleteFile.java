@@ -14,6 +14,7 @@ public class UploadAndDeleteFile {
 
     private static final String filePath = "E:/blog/src/main/resources/static/images/featured-post/";
 
+    private static final String articleImgPath = "E:/blog/src/main/resources/static/images/masonary-post/";
     /**
      * 新增分类图片
      * */
@@ -76,4 +77,66 @@ public class UploadAndDeleteFile {
             System.out.println(e.toString());
         }
     }
+
+    /*----------------------------*/
+
+    /**
+     * 新增文章题图
+     * */
+    public void articleUpload(Long articleId,MultipartFile articleImg){
+
+        String fileName = (articleId+".jpg");
+
+        File img = new File(articleImgPath+fileName);
+
+        try{
+            //项目运行实际目录下的储存位置
+            String classesPath= ResourceUtils.getURL("classpath:").getPath()+"/static/images/masonary-post/";
+            File classesImg = new File(classesPath+fileName);
+            //然后复制到实际运行的文件夹中
+            FileUtils.copyInputStreamToFile(articleImg.getInputStream(),classesImg);
+
+            //存入项目文件夹
+            articleImg.transferTo(img);
+
+
+        }catch (IOException e){
+            System.out.println(e.toString());
+        }
+    }
+
+    /**
+     * 删除分类图片
+     * */
+    public void articleDelete(Long articleId){
+        String fileName = (articleId+".jpg");
+        File img = new File(articleImgPath+fileName);
+        try {
+            //项目运行实际目录下的储存位置
+            String classesPath= ResourceUtils.getURL("classpath:").getPath()+"/static/images/masonary-post/";
+            File classesImg = new File(classesPath+fileName);
+
+            if(img.exists()&&classesImg.exists()){
+                img.delete();
+                classesImg.delete();
+            }
+        }catch(IOException e){
+            System.out.println(e.toString());
+        }
+    }
+
+    /**
+     * 更新文章题图
+     * */
+    public void articleUpdate(Long articleId,MultipartFile articleImg){
+
+        if(!articleImg.isEmpty()){//图片默认不用更新
+        //删除旧图片
+        articleDelete(articleId);
+        //储存新的图片
+        articleUpload(articleId,articleImg);
+        }
+
+    }
+
 }

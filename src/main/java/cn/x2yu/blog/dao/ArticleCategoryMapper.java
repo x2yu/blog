@@ -19,5 +19,7 @@ public interface ArticleCategoryMapper {
 
     int updateByPrimaryKeySelective(ArticleCategory record);
 
+    int updateByArticleIdSelective(ArticleCategory record);
+
     int updateByPrimaryKey(ArticleCategory record);
 }
