@@ -1,20 +1,31 @@
 package cn.x2yu.blog.util;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 @Service
 public class UploadAndDeleteFile {
 
+    @Autowired
+    ReadMd readMd;
+
     private static final String filePath = "E:/blog/src/main/resources/static/images/featured-post/";
 
     private static final String articleImgPath = "E:/blog/src/main/resources/static/images/masonary-post/";
+
+    private static final String articleMdPath = "E:/blog/src/main/resources/markdown/";
+
     /**
      * 新增分类图片
      * */
@@ -47,9 +58,7 @@ public class UploadAndDeleteFile {
     * 更新分类图片
     * */
     public void categoryUpdate(Long categoryId,MultipartFile categoryImg){
-        if(categoryImg.isEmpty()){//图片默认不用更新
-            return ;
-        }
+
         //删除旧图片
         categoryDelete(categoryId);
         //储存新的图片
@@ -106,7 +115,7 @@ public class UploadAndDeleteFile {
     }
 
     /**
-     * 删除分类图片
+     * 删除文章图片
      * */
     public void articleDelete(Long articleId){
         String fileName = (articleId+".jpg");
@@ -130,11 +139,96 @@ public class UploadAndDeleteFile {
      * */
     public void articleUpdate(Long articleId,MultipartFile articleImg){
 
-        if(!articleImg.isEmpty()){//图片默认不用更新
         //删除旧图片
         articleDelete(articleId);
         //储存新的图片
         articleUpload(articleId,articleImg);
+
+    }
+
+    /**
+     * 更新文章内容
+     * */
+    public void articleContentUpdate(String title,String content){
+
+        //根据Md5值判断文章内容是否改变，有改变才更新
+        String contentMd5 = DigestUtils.md2Hex(content);
+        System.out.println("新文件的md5:  "+contentMd5);
+
+        try{
+            String fileName = title+".md";
+
+            String oldContent = readMd.readMdFile(fileName);
+            String Md5o = DigestUtils.md2Hex(oldContent);
+            System.out.println("老文件的md5:  "+Md5o);
+
+            //如果不相等则有更新
+            if(!contentMd5.equals(Md5o)){
+              //先删除旧文件
+                articleContentDelete(fileName);
+
+              //创建新的同名文件
+                articleMdUpload(title,content);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+
+    /**
+     * 删除文章md载体文件
+     * */
+    public void articleContentDelete(String fileName){
+
+        File mdFile = new File(articleMdPath+fileName);
+
+        try{
+            //项目运行实际目录下Md文件的储存位置
+
+            Resource resource = new ClassPathResource("markdown/"+fileName);
+            File file = resource.getFile();
+
+            if(file.exists()&&mdFile.exists()){
+                mdFile.exists();
+                file.delete();
+            }
+
+        }catch (IOException e){
+            System.out.println(e.toString());
+        }
+    }
+
+    /**
+     * 新增文章Md
+     * */
+    public void articleMdUpload(String title,String content){
+
+        String fileName = title+".md";
+        File mdFile = new File(articleMdPath+fileName);
+
+        try{
+            if(!mdFile.exists()){
+                mdFile.createNewFile();
+            }
+            FileOutputStream fos = new FileOutputStream(mdFile);
+            fos.write(content.getBytes());
+
+            //真实运行的文件夹
+            String classesPath= ResourceUtils.getURL("classpath:").getPath()+"/markdown/";
+            File classesMdFile = new File(classesPath+fileName);
+
+            //然后复制到实际运行的文件夹中
+            FileOutputStream classfos = new FileOutputStream(classesMdFile);
+            classfos.write(content.getBytes());
+
+            fos.close();
+            classfos.close();
+
+        }catch (IOException e){
+            e.printStackTrace();
         }
 
     }

@@ -244,6 +244,7 @@
       </div>
     </div>
 
+    <!-- 编辑模态框-->
     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -287,6 +288,30 @@
         </div>
       </div>
     </div>
+    </div>
+
+
+    <!--确定删除模态框-->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+      <div class="modal-dialog " role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title" id="deleteModalLabel">操作确认</h3>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <h4>确定要删除此文章吗</h4>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" onclick="deleteArticle()">删除</button>
+            <p hidden id="article_delete_id"></p>
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
@@ -315,7 +340,7 @@
                     <p class="card-text d-inline-block mb-3">{{summary}}</p>
                     <span class="text-muted">{{create_by}}</span>
                     <div class="col text-right view-report">
-                    <a href="#">
+                    <a href="#" data-toggle="modal" data-target="#deleteModal" onclick="showDelete(this)">
                               <span class="text-danger">
                                 <i class="material-icons">clear</i>
                               </span> 删除 </a>
@@ -422,6 +447,11 @@
           getArticle(articleId);
         }
 
+        function showDelete(ob) {
+          var articleId = $(ob).next().next().text();
+          $("#article_delete_id").html(articleId);
+        }
+
         //获取对应文章内容 填充到模态框
         function getArticle(articleId) {
           $.ajax({
@@ -490,6 +520,29 @@
                     console.log(error);
                 }
             });
+        }
+
+        function deleteArticle() {
+
+          var articleId = $("#article_delete_id").text();
+          $.ajax({
+            type:"delete",
+            url:"/admin/articles/"+articleId,
+            cache: false,  //禁用缓存
+            async:true,
+            success:function(res){
+              $("#deleteModal").modal('hide');
+
+              $('#deleteModal').on('hidden.bs.modal', function () {
+                // 关闭后清空分类数据重新请求
+                $("#article_content").empty();
+                listArticles();
+              })
+            },
+            error:function (error) {
+              console.log(error);
+            }
+          });
         }
 
 

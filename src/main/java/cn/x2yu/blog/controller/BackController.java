@@ -6,8 +6,10 @@ import cn.x2yu.blog.entity.CategoryInfo;
 import cn.x2yu.blog.service.ArticleService;
 import cn.x2yu.blog.service.CategoryService;
 import cn.x2yu.blog.service.CommentService;
+import cn.x2yu.blog.util.ReadMd;
 import cn.x2yu.blog.util.UploadAndDeleteFile;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +28,8 @@ public class BackController {
     CategoryService categoryService;
     @Autowired
     ArticleService articleService;
-
+    @Autowired
+    ReadMd readMd;
     /**
      * 增加一篇文章
      */
@@ -41,7 +44,10 @@ public class BackController {
      * */
     @ApiOperation("根据id删除一篇文章")
     @DeleteMapping("articles/{id}")
-    public String deleteArticle(){
+    public String deleteArticle(@PathVariable("id")Long articleId){
+
+        System.out.println("删除文章id:"+articleId);
+
         return null;
     }
 
@@ -72,12 +78,14 @@ public class BackController {
         articleService.updateArticleCategory(articleCategory);
         articleService.updateArticlePic(articleId);
 
+
         //图片资源更新
+        if(!img.isEmpty()){
         uploadAndDeleteFile.articleUpload(articleId,img);
+        }
 
         //文章文件更新
-
-
+        uploadAndDeleteFile.articleContentUpdate(title,content);
 
         return null;
     }
@@ -158,7 +166,9 @@ public class BackController {
         //数据库更新
         categoryService.updateCategory(categoryInfo);
         //图片资源更新
-        uploadAndDeleteFile.categoryUpdate(categoryId,img);
+        if(!img.isEmpty()){
+            uploadAndDeleteFile.categoryUpdate(categoryId,img);
+        }
 
         return null;
     }
