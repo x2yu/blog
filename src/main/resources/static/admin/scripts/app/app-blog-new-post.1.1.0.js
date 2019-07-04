@@ -20,13 +20,13 @@
     ];
 
     // Init the Quill RTE
-    var quill = new Quill('#editor-container', {
-      modules: {
-        toolbar: toolbarOptions
-      },
-      placeholder: 'Words can be like x-rays if you use them properly...',
-      theme: 'snow'
-    });
+    // var quill = new Quill('#editor-container', {
+    //   modules: {
+    //     toolbar: toolbarOptions
+    //   },
+    //   placeholder: 'Words can be like x-rays if you use them properly...',
+    //   theme: 'snow'
+    // });
 
   });
 })(jQuery);
