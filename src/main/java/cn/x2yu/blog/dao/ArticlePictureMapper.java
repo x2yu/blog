@@ -7,6 +7,8 @@ import java.util.List;
 public interface ArticlePictureMapper {
     int deleteByPrimaryKey(Long id);
 
+    int deleteByArticleId(Long id);
+
     int insert(ArticlePicture record);
 
     int insertSelective(ArticlePicture record);

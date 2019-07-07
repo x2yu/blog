@@ -63,6 +63,12 @@
     from tbl_article_info
     where id = #{id,jdbcType=BIGINT}
   </select>
+  <select id="selectByArticleName" parameterType="String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tbl_article_info
+    where title = #{title,jdbcType=VARCHAR}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from tbl_article_info
     where id = #{id,jdbcType=BIGINT}

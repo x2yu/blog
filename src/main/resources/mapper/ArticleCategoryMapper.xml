@@ -71,6 +71,12 @@
     delete from tbl_article_category
     where id = #{id,jdbcType=BIGINT}
   </delete>
+
+  <delete id="deleteByArticleId" parameterType="java.lang.Long">
+    delete from tbl_article_category
+    where article_id = #{article_id,jdbcType=BIGINT}
+  </delete>
+
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.x2yu.blog.entity.ArticleCategory" useGeneratedKeys="true">
     insert into tbl_article_category (category_id, article_id, create_by, 
       modified_by)

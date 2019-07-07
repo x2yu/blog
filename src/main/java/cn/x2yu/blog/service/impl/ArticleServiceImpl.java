@@ -43,20 +43,31 @@ public class ArticleServiceImpl implements ArticleService {
 
 
     @Override
-    public void addAticle() {
-
+    public void addAticle(ArticleInfo articleInfo) {
+        articleInfoMapper.insertSelective(articleInfo);
     }
 
     @Override
-    public void deleteArticle() {
+    public Long getArtilceIdByName(String title) {
+        ArticleInfo articleInfo = articleInfoMapper.selectByArticleName(title);
+        return articleInfo.getId();
+    }
 
+    @Override
+    public void deleteArticle(Long articleId) {
+        articleInfoMapper.deleteByPrimaryKey(articleId);
+    }
+
+    @Override
+    public void deleteArticleCategory(Long articleId) {
+
+        articleCategoryMapper.deleteByArticleId(articleId);
     }
 
     @Override
     public void updateArticleInfo(ArticleInfo articleInfo) {
 
         articleInfoMapper.updateByPrimaryKeySelective(articleInfo);
-
     }
 
     @Override
@@ -64,6 +75,11 @@ public class ArticleServiceImpl implements ArticleService {
 
         articleCategoryMapper.updateByArticleIdSelective(articleCategory);
 
+    }
+
+    @Override
+    public void addArticleCategory(ArticleCategory articleCategory) {
+        articleCategoryMapper.insertSelective(articleCategory);
     }
 
     @Override
@@ -76,6 +92,23 @@ public class ArticleServiceImpl implements ArticleService {
         articlePicture.setPicture_url(pitctureUrl);
 
         articlePictureMapper.updateByArticleIdSelective(articlePicture);
+    }
+
+    @Override
+    public void addArticlePic(Long articleId) {
+        //数据库中题图储存
+        ArticlePicture articlePicture = new ArticlePicture();
+        String pitctureUrl = ("images/masonary-post/"+articleId+".jpg");
+        articlePicture.setArticle_id(articleId);
+        articlePicture.setPicture_url(pitctureUrl);
+
+        articlePictureMapper.insertSelective(articlePicture);
+
+    }
+
+    @Override
+    public void deleteArticlePic(Long articleId) {
+        articlePictureMapper.deleteByArticleId(articleId);
     }
 
     @Override

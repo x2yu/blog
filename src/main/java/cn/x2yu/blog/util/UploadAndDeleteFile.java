@@ -202,6 +202,7 @@ public class UploadAndDeleteFile {
     }
 
     /**
+     * 编辑时
      * 新增文章Md
      * */
     public void articleMdUpload(String title,String content){
@@ -231,6 +232,28 @@ public class UploadAndDeleteFile {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * 储存上传的md文件
+     * */
+    public void saveMdFile(String fileName,MultipartFile mdFile){
+
+        File articleMd = new File(articleMdPath+fileName);
+
+        try{
+            //项目运行实际目录下的储存位置
+            String classesPath= ResourceUtils.getURL("classpath:").getPath()+"/markdown/";
+            File classesMd = new File(classesPath+fileName);
+            //然后复制到实际运行的文件夹中
+            FileUtils.copyInputStreamToFile(mdFile.getInputStream(),classesMd);
+
+            //存入项目文件夹
+            mdFile.transferTo(articleMd);
+
+        }catch (IOException e){
+            System.out.println(e.toString());
+        }
     }
 
 }

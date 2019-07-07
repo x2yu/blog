@@ -482,23 +482,23 @@
         fromData.append('category_subtitle', $('#category_add_subtitle').val());
         fromData.append("category_img",$("#category_add_img")[0].files[0]);
         $.ajax({
-           url:"/admin/categories",
-           type:"post",
-           data: fromData,
-           processData: false, // 默认 | 不处理数据
-           contentType: false ,// 默认 | 不设置内容类型
-            success:function(res){
-                $("#addModal").modal('hide');
+                url:"/admin/categories",
+                type:"post",
+                data: fromData,
+                processData: false, // 默认 | 不处理数据
+                contentType: false ,// 默认 | 不设置内容类型
+                success:function(res){
+                    $("#addModal").modal('hide');
 
-                $('#addModal').on('hidden.bs.modal', function () {
-                    // 关闭后清空分类数据重新请求
-                    $("#category_container").empty();
-                    listCategories();
-                })
-            },
-            error:function (error) {
-                console.log(error);
-            }
+                    $('#addModal').on('hidden.bs.modal', function () {
+                        // 关闭后清空分类数据重新请求
+                        $("#category_container").empty();
+                        listCategories();
+                    })
+                },
+                error:function (error) {
+                    console.log(error);
+                }
         });
     }
 

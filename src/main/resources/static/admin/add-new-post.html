@@ -204,6 +204,18 @@
             </nav>
           </div>
           <!-- / .main-navbar -->
+          <div class="alert alert-success alert-dismissible fade show mb-0" id="alert-success" role="alert" hidden="hidden">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+            <i class="fa fa-check mx-2"></i>
+            <strong>上传成功！</strong></div>
+          <div class="alert alert-danger alert-dismissible fade show mb-0" id="alert-failed" role="alert" hidden="hidden">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+            <i class="fa fa-check mx-2"></i>
+            <strong>上传失败！</strong></div>
           <div class="main-content-container container-fluid px-4">
             <!-- Page Header -->
             <div class="page-header row no-gutters py-4">
@@ -220,21 +232,22 @@
                 <!-- Add New Post Form -->
                 <div class="card card-small mb-3">
                   <div class="card-body">
-                    <form class="add-new-post">
-                      <input class="form-control form-control-lg mb-4" type="text" placeholder="文章简介">
+                    <form class="add-new-post" id="article-add-from">
+                      <input class="form-control form-control-lg mb-4" id="article_add_summary" type="text" placeholder="文章简介">
                       <strong class="text-muted d-block mb-1">题 图</strong>
-                      <input type="file" name="file" class="form-control mb-1" id="article_add_img" style="padding: 0px;"
+                      <input type="file" name="file" class="form-control form-control mb-1" id="article_add_img"
                              placeholder="&nbsp;上传图片">
                       <img id="img_add_preview" class="mb-4" data-src="" src="" data-holder-rendered="true"
                            style="width: 35%; display: block;">
                       <strong class="text-muted d-block mb-1">分 类</strong>
                       <div class="btn-group btn-group-toggle mb-4" data-toggle="buttons" id="categories_add_tag">
+                        <p id="category_selected" hidden></p>
 
                       </div>
                       <strong class="text-muted d-block mb-1">Md File</strong>
-                      <input class="form-control form-control mb-5" type="file" >
+                      <input class="form-control form-control mb-5" id="article_add_content" type="file" >
                       <div class="col text-center view-report">
-                        <button type="submit" class="btn btn-white">
+                        <button type="button"data-toggle="modal" data-target="#uploadModal" class="btn btn-white">
                           <i class="material-icons">file_copy</i>提  交</button>
                       </div>
                     </form>
@@ -268,6 +281,28 @@
         </main>
       </div>
     </div>
+
+    <!--确定上传模态框-->
+    <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel">
+      <div class="modal-dialog " role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title" id="uploadModalLabel">操作确认</h3>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <h4>确定上传此文章吗</h4>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" onclick="submitArticle()">上传</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
@@ -283,7 +318,7 @@
     <script src='../js/template-web.js'></script>
     <!--制定卡片模板 -->
     <script type="text/html" id="categoryTagTemplate">
-      <label class="btn btn-white">
+      <label class="btn btn-white" onclick="translateValue(this)">
         <input type="radio" name="options" id="{{categoryId}}" autocomplete="off"> {{categoryName}} </label>
     </script>
 
@@ -338,6 +373,50 @@
           }
         });
       }
+
+      function submitArticle() {
+
+        var fromData = new FormData();
+        var fileName = getFileName($("#article_add_content").val());
+        fromData.append("article_title",fileName);
+        fromData.append("article_summary",$("#article_add_summary").val());
+        fromData.append("article_img",$("#article_add_img")[0].files[0]);
+        fromData.append("article_category",$("#category_selected").text());
+        fromData.append("article_content",$("#article_add_content")[0].files[0]);
+
+        //提交到后端
+        $.ajax({
+          url:"/admin/articles",
+          type:"post",
+          data: fromData,
+          processData: false, // 默认 | 不处理数据
+          contentType: false ,// 默认 | 不设置内容类型
+          success:function(res){
+          //  alert("成功！");
+          $("#alert-success").removeAttr("hidden");
+          $("#article-add-from")[0].reset();
+          },
+          error:function (error) {
+            $("#alert-failed").removeAttr("hidden");
+            console.log(error);
+          }
+        });
+
+      }
+
+      function getFileName(file){//获取文件名
+
+      //  var start = file.indexOf(".");
+        var stop=file.lastIndexOf("\\");//查找最后一个\的位置
+
+        return file.substring(stop+1); //截取最后一个\位置到字符长度，也就是截取文件名
+      }
+
+      function translateValue(ob) {
+        var lable = $(ob).text().trim();
+        $("#category_selected").html(lable);
+      }
+
     </script>
   </body>
 </html>

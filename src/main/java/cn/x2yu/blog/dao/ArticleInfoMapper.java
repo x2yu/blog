@@ -15,6 +15,8 @@ public interface ArticleInfoMapper {
 
     ArticleInfo selectByPrimaryKey(Long id);
 
+    ArticleInfo selectByArticleName(String title);
+
     int updateByPrimaryKeySelective(ArticleInfo record);
 
     int updateByPrimaryKey(ArticleInfo record);

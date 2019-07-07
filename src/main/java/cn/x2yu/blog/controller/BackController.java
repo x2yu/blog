@@ -9,7 +9,6 @@ import cn.x2yu.blog.service.CommentService;
 import cn.x2yu.blog.util.ReadMd;
 import cn.x2yu.blog.util.UploadAndDeleteFile;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,7 +34,42 @@ public class BackController {
      */
     @ApiOperation("增加一篇文章")
     @PostMapping("articles")
-    public String addArticle(){
+    public String addArticle(@RequestParam("article_title")String title,@RequestParam("article_summary")String summary,
+                             @RequestParam("article_category")String category,@RequestParam(value = "article_img",required = false)MultipartFile img,
+                             @RequestParam(value = "article_content",required = false)MultipartFile mdFile){
+
+        System.out.println("文章："+title);
+
+        //先储蓄md文件
+        uploadAndDeleteFile.saveMdFile(title,mdFile);
+
+        //储存数据库
+        ArticleInfo articleInfo = new ArticleInfo();
+        articleInfo.setTitle(title);
+        articleInfo.setSummary(summary);
+
+        articleService.addAticle(articleInfo);
+
+        //获取刚刚存入的文章id
+        Long articleId =  articleService.getArtilceIdByName(title);
+
+        //获取对应分类id
+        Long categoryId = categoryService.getCategoryInfoByName(category).getId();
+
+        //存入文章分类信息表
+        ArticleCategory articleCategory = new ArticleCategory();
+        articleCategory.setCategory_id(categoryId);
+        articleCategory.setArticle_id(articleId);
+
+        articleService.addArticleCategory(articleCategory);
+
+        //储存图片文件
+        uploadAndDeleteFile.articleUpload(articleId,img);
+
+        //文章图片信息表
+        articleService.addArticlePic(articleId);
+
+
         return null;
     }
 
@@ -47,6 +81,19 @@ public class BackController {
     public String deleteArticle(@PathVariable("id")Long articleId){
 
         System.out.println("删除文章id:"+articleId);
+
+        //删对应文件图片/md文件
+        uploadAndDeleteFile.articleDelete(articleId);
+
+        String fileName = articleService.getOneById(articleId);
+        uploadAndDeleteFile.articleContentDelete(fileName);
+
+        //删关系 分类和图片
+        articleService.deleteArticleCategory(articleId);
+        articleService.deleteArticlePic(articleId);
+
+        //删除articleInfo
+        articleService.deleteArticle(articleId);
 
         return null;
     }

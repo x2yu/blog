@@ -17,16 +17,28 @@ import java.util.List;
  */
 
 public interface ArticleService {
-    void addAticle();
-    void deleteArticle();
+
+    void addAticle(ArticleInfo articleInfo);
+
+    void deleteArticle(Long articleId);
+
+    void deleteArticleCategory(Long articleId);
 
     void updateArticleInfo(ArticleInfo articleInfo);
 
     void updateArticleCategory(ArticleCategory articleCategory);
 
+    void addArticleCategory(ArticleCategory articleCategory);
+
     void updateArticlePic(Long articleId);
 
+    void addArticlePic(Long articleId);
+
+    void deleteArticlePic(Long articleId);
+
     String getOneById(Long id);
+
+    Long getArtilceIdByName(String title);
 
     ArticlePicture getPictureByArticleId(Long id);
 

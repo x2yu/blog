@@ -71,6 +71,12 @@
     delete from tbl_article_picture
     where id = #{id,jdbcType=BIGINT}
   </delete>
+
+  <delete id="deleteByArticleId" parameterType="java.lang.Long">
+    delete from tbl_article_picture
+    where article_id = #{article_id,jdbcType=BIGINT}
+  </delete>
+
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.x2yu.blog.entity.ArticlePicture" useGeneratedKeys="true">
     insert into tbl_article_picture (article_id, picture_url, create_by, 
       modified_by)
